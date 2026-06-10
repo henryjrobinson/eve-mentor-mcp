@@ -21,8 +21,18 @@ import { getRecentLosses } from "./zkill.js";
 import { flightPlan } from "./skills.js";
 import { CAREER_PATHS } from "./careers.js";
 import { adviseAmmo, analyzeFit } from "./combat.js";
+import { defineJargon } from "./jargon.js";
 
-const server = new McpServer({ name: "eve-mentor", version: "0.1.0" });
+const server = new McpServer(
+  { name: "eve-mentor", version: "0.3.0" },
+  {
+    instructions:
+      "You are mentoring an EVE Online player. EVE's data changes with every patch: do NOT " +
+      "estimate prices, skill requirements, fits, or danger from training knowledge — only values " +
+      "returned by these tools are authoritative. If a tool can answer it, call the tool. " +
+      "Your job is to turn the returned data into clear, honest coaching for someone still learning the game.",
+  },
+);
 
 type ToolResult = { content: { type: "text"; text: string }[]; isError?: boolean };
 
@@ -168,6 +178,43 @@ server.tool(
     } catch (error) {
       return asError(error);
     }
+  },
+);
+
+server.tool(
+  "jargon",
+  "EVE slang glossary. Pass a term to define it, or no term to list everything known. Use whenever the player hits a word like 'krab', 'tidi', 'doctrine', or 'asset safety'.",
+  { term: z.string().optional().describe("The slang term to define; omit to list all terms") },
+  async ({ term }) => {
+    try {
+      return asResult(defineJargon(term));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "sitrep",
+  "Session-start situation report in one call: login state, character overview (skillpoints/wallet/location/ship), what's training, and the most recent loss. Call this at the start of a mentoring session to orient.",
+  {},
+  async () => {
+    const report: Record<string, unknown> = {};
+    const auth = await authStatus();
+    report.auth = auth;
+    if (auth.loggedIn && auth.characterName) {
+      const [sheet, queue, losses] = await Promise.allSettled([
+        getCharacterSheet(),
+        getSkillQueue(),
+        getRecentLosses(auth.characterName, 1),
+      ]);
+      report.character = sheet.status === "fulfilled" ? sheet.value : `unavailable: ${sheet.reason}`;
+      report.skillQueue = queue.status === "fulfilled" ? queue.value.slice(0, 5) : `unavailable: ${queue.reason}`;
+      report.lastLoss = losses.status === "fulfilled" ? (losses.value[0] ?? "no recorded losses") : `unavailable: ${losses.reason}`;
+    } else {
+      report.note = "Not logged in — use eve_login for a personalized sitrep, or ask for the player's character name to pull public loss history.";
+    }
+    return asResult(report);
   },
 );
 

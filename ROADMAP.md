@@ -37,13 +37,23 @@ Attacks pain points #4 and #2.
 - `career_test` ✅ — pulled forward from v0.4: 15-path career taxonomy with traits; Claude runs the sorting-hat interview and matches.
 - Still open for v0.2.x: `skill_gap_for_fit` (whole fitting at once), `whats_training_worth` (queue sanity-check, Magic 14 awareness)
 
-### v0.3 — Fitting & combat coach
+### v0.3 — Fitting & combat coach — ✅ core shipped
 
 Attacks pain point #6 and the "weapons and ammo" confusion.
 
-- `explain_fit` — paste a fit (or reference a loss): tank type, weapon system, range band, what it's for, what's wrong (mixed tanks, unbonused weapons, no prop mod)
-- `ammo_advisor <target>` — damage-type matching: EM/Therm/Kin/Exp vs shields/armor, NPC faction resist holes (Guristas→kinetic, Blood Raiders→EM/therm, Angels→explosive...), short vs long range ammo tradeoffs
-- `proven_fits <ship>` — what fits are actually surviving/killing on zKillboard right now, filtered for newbie-flyable
+- `analyze_fit` ✅ — classifies modules via ESI groups and mechanically detects classic mistakes: mixed weapon systems, mixed shield+armor tank, no propulsion, damage mods without matching weapons
+- `ammo_advisor <target>` ✅ — damage-type matching: NPC faction resist holes (Guristas→kinetic, Blood Raiders→EM/therm, Angels→explosive...) with concrete ammo names per weapon system
+- `jargon` ✅ — ~45-term slang glossary (pain #8; competitor research confirmed nobody has one)
+- `sitrep` ✅ — one-call session-start orientation (borrowed from vael's SITREP pattern)
+- Server-level anti-hallucination instructions ✅ (borrowed from jita-mcp): "only tool values are authoritative"
+- Still open for v0.3.x: `fit_readiness` (paste an EFT fit → missing skills + training time, the most mentor-shaped tool found in competitor research), `proven_fits <ship>` from zKillboard
+
+### Competitor research takeaways (June 2026, full dossier in docs/)
+
+- **Loss analysis and career matching are confirmed unoccupied** — zKill appears in 3 competing MCPs, only for danger ratings; no one explains deaths; vael covers exactly one career.
+- Worth borrowing later: goal-language tool params (jita-mcp), pilot memory tools (vael), corp evaluator for newbies (OSINT-MCP primitives), fees-modeled market math (d3ej), `should_i_undock`-style decision-shaped tools.
+- ESI citizenship bar (vael/d3ej/jita-mcp converged): watch X-ESI-Error-Limit headers, honor Expires/ETag caching, bounded concurrency. Adopt before public release.
+- Remote hosting path (jita-mcp): stateless streamable-HTTP works great for public-data tools; keep character/SSO tools local (or add a server-side encrypted token store later). A split deployment is the realistic v1.0 shape.
 
 ### v0.4 — Direction & ISK (the "now what?" mentor)
 
