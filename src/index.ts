@@ -20,6 +20,7 @@ import {
 import { getRecentLosses } from "./zkill.js";
 import { flightPlan } from "./skills.js";
 import { CAREER_PATHS } from "./careers.js";
+import { adviseAmmo, analyzeFit } from "./combat.js";
 
 const server = new McpServer({ name: "eve-mentor", version: "0.1.0" });
 
@@ -120,6 +121,37 @@ server.tool(
         return asError(`No item named "${item_name}" found. Names must be exact.`);
       }
       return asResult(await flightPlan(type.id, type.name));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "ammo_advisor",
+  "Which damage type to shoot (and tank) against a target: NPC pirate factions (Guristas, Serpentis, Angels, Blood Raiders, Sansha, Rogue Drones, Triglavians) or shield/armor-tanked players. Includes concrete ammo names per weapon system.",
+  { target: z.string().describe('Faction or tank type, e.g. "Guristas" or "armor-tanked player"') },
+  async ({ target }) => {
+    try {
+      return asResult(adviseAmmo(target));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "analyze_fit",
+  "Mechanical fit check: classifies each module by type and detects classic mistakes (mixed weapon systems, mixed shield+armor tank, no propulsion, damage mods without matching weapons). Feed it module names from a loss report or a pasted fit, then explain the findings to the player.",
+  {
+    module_names: z
+      .array(z.string())
+      .min(1)
+      .describe("Module names exactly as they appear in the fit/killmail"),
+  },
+  async ({ module_names }) => {
+    try {
+      return asResult(await analyzeFit(module_names));
     } catch (error) {
       return asError(error);
     }
