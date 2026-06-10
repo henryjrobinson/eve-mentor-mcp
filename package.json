@@ -1,0 +1,38 @@
+{
+  "name": "eve-mentor-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that turns Claude into an EVE Online mentor — analyzes your losses, knows your character, and helps you learn the game.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "eve-mentor-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "smoke": "node dist/smoke.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "eve-online",
+    "mcp",
+    "model-context-protocol",
+    "esi",
+    "zkillboard",
+    "claude"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
