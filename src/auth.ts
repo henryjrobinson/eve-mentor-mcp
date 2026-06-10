@@ -15,7 +15,13 @@ import { execFile } from "node:child_process";
 const SSO_AUTHORIZE_URL = "https://login.eveonline.com/v2/oauth/authorize";
 const SSO_TOKEN_URL = "https://login.eveonline.com/v2/oauth/token";
 const CALLBACK_PORT = 8484;
+// Local listener that actually receives the auth code...
 const CALLBACK_URL = `http://localhost:${CALLBACK_PORT}/callback`;
+// ...but CCP's dev portal only accepts https callback URLs, so the registered
+// redirect is a static relay page that immediately forwards the query string
+// to the local listener. Override with EVE_REDIRECT_URI if self-hosting one.
+const REDIRECT_URI =
+  process.env.EVE_REDIRECT_URI ?? "https://henryrobinson.net/eve-mcp/callback";
 const LOGIN_TIMEOUT_MS = 180_000;
 const TOKEN_DIR = join(homedir(), ".config", "eve-mentor");
 const TOKEN_FILE = join(TOKEN_DIR, "tokens.json");
@@ -49,7 +55,7 @@ function getClientId(): string {
   if (!clientId) {
     throw new AuthError(
       "EVE_CLIENT_ID is not set. Register a free app at https://developers.eveonline.com " +
-        `(callback URL: ${CALLBACK_URL}) and set its Client ID in the MCP server env.`,
+        `(callback URL: ${REDIRECT_URI}) and set its Client ID in the MCP server env.`,
     );
   }
   return clientId;
@@ -147,7 +153,7 @@ export async function login(): Promise<{ characterName: string; characterId: num
 
   const authorizeUrl =
     `${SSO_AUTHORIZE_URL}?response_type=code` +
-    `&redirect_uri=${encodeURIComponent(CALLBACK_URL)}` +
+    `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
     `&client_id=${clientId}` +
     `&scope=${encodeURIComponent(SCOPES)}` +
     `&code_challenge=${challenge}&code_challenge_method=S256` +
