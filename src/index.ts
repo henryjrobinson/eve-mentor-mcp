@@ -22,6 +22,7 @@ import { flightPlan } from "./skills.js";
 import { CAREER_PATHS } from "./careers.js";
 import { adviseAmmo, analyzeFit } from "./combat.js";
 import { defineJargon } from "./jargon.js";
+import { getPayGuide } from "./payguide.js";
 
 const server = new McpServer(
   { name: "eve-mentor", version: "0.3.0" },
@@ -188,6 +189,19 @@ server.tool(
   async ({ term }) => {
     try {
       return asResult(defineJargon(term));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "cheapest_way_to_play",
+  "EVE's pay-vs-play economy explained with live numbers: Alpha (free) vs Omega (subscribed), how PLEX lets you buy game time with ISK instead of money, today's actual Jita price for an Omega month, and an honest grind-hours-vs-cash recommendation.",
+  {},
+  async () => {
+    try {
+      return asResult(await getPayGuide());
     } catch (error) {
       return asError(error);
     }
