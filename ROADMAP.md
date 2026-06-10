@@ -53,11 +53,16 @@ Attacks pain points #2 and #10. No playstyle recommender exists anywhere — con
 - `what_to_do_tonight` — content suggestions matched to actual skills, ship, location, wallet, and risk appetite
 - `isk_guidance` — viable income for the player's actual SP level (exploration ≫ mining for new players)
 
-### v0.5 — Safety & logistics
+### v0.5 — Safety, logistics & news
 
 - `route_danger` — per-jump kill activity, gatecamp heuristics from zKill
 - `where_to_buy <item>` — cheapest sensible hub given player location, price vs haul tradeoff
 - `jargon` — EVE slang glossary (EVE Uni wiki–backed)
+- `whats_happening` — a news layer for returning players: big battles (zKill), sov changes, patch notes, what changed since you last logged in. Origin story: Henry once returned to find he couldn't dock where all his stuff was, got no satisfying answer, and quit again. A chatbot that could explain "what happened while you were gone" would have saved that subscription.
+
+### v0.2.x additions (shipped early)
+
+- `my_assets` ✅ — all assets grouped by location, flagging asset-safety wraps and structures the character is locked out of. Directly targets the "I came back and couldn't reach my stuff" quit-moment.
 
 ### Distribution (after v0.2)
 

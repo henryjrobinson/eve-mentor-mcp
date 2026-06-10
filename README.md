@@ -67,6 +67,7 @@ claude mcp add eve-mentor -- node /path/to/eve-mentor-mcp/dist/index.js
    - `esi-location.read_location.v1`
    - `esi-location.read_ship_type.v1`
    - `esi-wallet.read_character_wallet.v1`
+   - `esi-assets.read_assets.v1`
 4. Set the callback URL to exactly `http://localhost:8484/callback`
 5. Copy the **Client ID** and add it to the server's environment:
 

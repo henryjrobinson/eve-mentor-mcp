@@ -71,6 +71,96 @@ export async function getSkillQueue(): Promise<
   }));
 }
 
+interface AssetEntry {
+  item_id: number;
+  type_id: number;
+  location_id: number;
+  location_flag: string;
+  location_type: string;
+  quantity: number;
+}
+
+const STRUCTURE_ID_FLOOR = 1_000_000_000_000;
+
+async function locationLabel(
+  locationId: number,
+  accessToken: string,
+  stationNames: Map<number, string>,
+): Promise<string> {
+  if (locationId < STRUCTURE_ID_FLOOR) {
+    return stationNames.get(locationId) ?? `location-${locationId}`;
+  }
+  // Player-owned structure: name lookup requires docking access — a 403 here
+  // means the character is locked out (assets likely stranded or in asset safety).
+  try {
+    const { data } = await esiFetch<{ name: string }>(
+      `/universe/structures/${locationId}/`,
+      { token: accessToken },
+    );
+    return data.name;
+  } catch {
+    return `INACCESSIBLE structure ${locationId} (no docking access — assets may be stranded; check asset safety)`;
+  }
+}
+
+/** All assets grouped by location, with inaccessible structures and asset safety flagged. */
+export async function getAssetsSummary(): Promise<
+  {
+    location: string;
+    inAssetSafety: boolean;
+    itemCount: number;
+    items: { name: string; quantity: number }[];
+  }[]
+> {
+  const { accessToken, characterId } = await getSession();
+
+  const all: AssetEntry[] = [];
+  let page = 1;
+  let pages = 1;
+  do {
+    const result = await esiFetch<AssetEntry[]>(
+      `/characters/${characterId}/assets/?page=${page}`,
+      { token: accessToken },
+    );
+    all.push(...result.data);
+    pages = result.pages;
+    page += 1;
+  } while (page <= pages);
+
+  // Top-level assets only: things whose container is a station/structure,
+  // not another asset (e.g. modules fitted to a stored ship).
+  const ownItemIds = new Set(all.map((asset) => asset.item_id));
+  const topLevel = all.filter((asset) => !ownItemIds.has(asset.location_id));
+
+  const byLocation = new Map<number, AssetEntry[]>();
+  for (const asset of topLevel) {
+    const group = byLocation.get(asset.location_id);
+    if (group) {
+      group.push(asset);
+    } else {
+      byLocation.set(asset.location_id, [asset]);
+    }
+  }
+
+  const stationIds = [...byLocation.keys()].filter((id) => id < STRUCTURE_ID_FLOOR);
+  const typeIds = topLevel.map((asset) => asset.type_id);
+  const names = await namesForIds([...stationIds, ...typeIds]);
+
+  return Promise.all(
+    [...byLocation.entries()].map(async ([locationId, assets]) => ({
+      location: await locationLabel(locationId, accessToken, names),
+      inAssetSafety: assets.some((asset) => asset.location_flag === "AssetSafety"),
+      itemCount: assets.length,
+      items: assets
+        .map((asset) => ({
+          name: names.get(asset.type_id) ?? `type-${asset.type_id}`,
+          quantity: asset.quantity,
+        }))
+        .slice(0, 25),
+    })),
+  );
+}
+
 export async function getTopSkills(limit: number): Promise<
   { skill: string; level: number; skillpoints: number }[]
 > {

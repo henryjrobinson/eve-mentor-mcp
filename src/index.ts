@@ -9,7 +9,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { authStatus, login } from "./auth.js";
-import { getCharacterSheet, getSkillQueue, getTopSkills } from "./character.js";
+import { getAssetsSummary, getCharacterSheet, getSkillQueue, getTopSkills } from "./character.js";
 import {
   getJitaPrices,
   getSystem,
@@ -188,6 +188,19 @@ server.tool(
   async () => {
     try {
       return asResult(await getSkillQueue());
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "my_assets",
+  "Everything the logged-in character owns, grouped by location. Flags asset-safety wraps and structures the character can no longer dock at — use this to find stuff stranded from years ago.",
+  {},
+  async () => {
+    try {
+      return asResult(await getAssetsSummary());
     } catch (error) {
       return asError(error);
     }
