@@ -18,6 +18,8 @@ import {
   resolveNames,
 } from "./esi.js";
 import { getRecentLosses } from "./zkill.js";
+import { flightPlan } from "./skills.js";
+import { CAREER_PATHS } from "./careers.js";
 
 const server = new McpServer({ name: "eve-mentor", version: "0.1.0" });
 
@@ -100,6 +102,37 @@ server.tool(
         return asResult({ message: `${character_name} has no recorded losses on zKillboard.` });
       }
       return asResult(losses);
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "can_i_fly",
+  "What does it take to fly/use a ship or module? Returns the full recursive skill prerequisite tree, an ordered training plan, total skillpoints, and estimated training time. If a character is logged in, the plan is diffed against their actual trained skills.",
+  { item_name: z.string().describe('Exact ship or module name, e.g. "Vexor" or "Damage Control II"') },
+  async ({ item_name }) => {
+    try {
+      const ids = await resolveNames([item_name]);
+      const type = ids.inventory_types?.[0];
+      if (!type) {
+        return asError(`No item named "${item_name}" found. Names must be exact.`);
+      }
+      return asResult(await flightPlan(type.id, type.name));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "career_test",
+  "Data for the EVE career 'sorting hat'. Returns all recognized career paths with traits (social/risk/income/activity, who it appeals to, first ship, first steps). To use: interview the player about what they enjoy (solo vs group, risk appetite, building vs fighting vs exploring, active vs idle, how much structure they want), THEN call this and match their answers to 2-3 paths. Recommend concrete first steps, not just labels.",
+  {},
+  async () => {
+    try {
+      return asResult(CAREER_PATHS);
     } catch (error) {
       return asError(error);
     }

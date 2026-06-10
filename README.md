@@ -15,6 +15,8 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 
 | Tool | Auth | What it does |
 |------|------|--------------|
+| `can_i_fly` | optional | Full recursive skill prerequisite tree + ordered training plan for any ship/module; diffed against your real skills when logged in |
+| `career_test` | none | The EVE career "sorting hat" — Claude interviews you, then matches you to playstyles |
 | `recent_losses` | none | A character's recent losses with full fit detail (zKillboard + ESI) |
 | `system_intel` | none | Security status + kills/jumps in the last hour for any system |
 | `lookup_item` | none | Item/ship/module description + live Jita buy/sell prices |

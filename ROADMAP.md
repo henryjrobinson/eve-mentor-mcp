@@ -29,14 +29,13 @@ The missing layer is **synthesis**: connecting a player's goal ("I want to fly a
 - `system_intel`, `lookup_item` + Jita prices
 - EVE SSO (PKCE), `character_sheet`, `skill_queue`, `top_skills`
 
-### v0.2 — "Can I fly it?" (skill mentor) — NEXT
+### v0.2 — "Can I fly it?" + career sorting hat — ✅ (shipped)
 
-Attacks pain point #4, the most mechanically solvable one.
+Attacks pain points #4 and #2.
 
-- `can_i_fly <ship>` — recursive prerequisite tree (dogma attrs 182/183/184/1285/1289/1290 + level attrs 277/278/279/1286/1287/1288) diffed against the character's actual skills: what's missing, in what order, estimated training time. ESI only returns top-level requirements, so ship a precomputed prerequisite tree from the SDE (Fuzzwork SQLite or EVE Ref reference data) rather than recursive live calls.
-- `skill_gap_for_fit` — same, but for a full fitting
-- `whats_training_worth` — sanity-check the current queue against the player's stated goal; knows the "Magic 14" and when it is (and isn't) the right advice
-- Bundled SDE subset: skills, ships, prerequisite chains, weapon/ammo attributes
+- `can_i_fly <ship|module>` ✅ — recursive prerequisite tree (dogma attrs 182/183/184/1285/1289/1290 + level attrs 277/278/279/1286/1287/1288), ordered training plan with SP totals and time estimates, diffed against the character's actual skills when logged in. Implemented via recursive ESI type fetches with caching (trees are shallow; an SDE bundle is a later optimization, not a requirement).
+- `career_test` ✅ — pulled forward from v0.4: 15-path career taxonomy with traits; Claude runs the sorting-hat interview and matches.
+- Still open for v0.2.x: `skill_gap_for_fit` (whole fitting at once), `whats_training_worth` (queue sanity-check, Magic 14 awareness)
 
 ### v0.3 — Fitting & combat coach
 
