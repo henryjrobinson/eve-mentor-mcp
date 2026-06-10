@@ -20,10 +20,35 @@ export class EsiError extends Error {
   }
 }
 
+// ESI gives every client an error budget (default 100 per minute); blowing it
+// gets you temporarily banned. Pause when the budget runs low.
+const ERROR_BUDGET_FLOOR = 20;
+let errorBudgetPauseUntil = 0;
+
+// Unauthenticated GET responses carry an Expires header; honoring it keeps us
+// from re-downloading heavy endpoints (system kills/jumps, market orders).
+const responseCache = new Map<string, { data: unknown; pages: number; expiresAt: number }>();
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function esiFetch<T>(
   path: string,
   options: { method?: string; body?: unknown; token?: string; raw?: boolean } = {},
 ): Promise<{ data: T; pages: number }> {
+  const isCacheable = (options.method ?? "GET") === "GET" && !options.token;
+  if (isCacheable) {
+    const cached = responseCache.get(path);
+    if (cached && cached.expiresAt > Date.now()) {
+      return { data: cached.data as T, pages: cached.pages };
+    }
+  }
+
+  if (errorBudgetPauseUntil > Date.now()) {
+    await sleep(errorBudgetPauseUntil - Date.now());
+  }
+
   const response = await fetch(`${ESI_BASE}${path}`, {
     method: options.method ?? "GET",
     headers: {
@@ -35,13 +60,29 @@ export async function esiFetch<T>(
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
 
+  const budgetRemaining = Number(response.headers.get("x-esi-error-limit-remain") ?? "100");
+  if (budgetRemaining < ERROR_BUDGET_FLOOR) {
+    const resetSeconds = Number(response.headers.get("x-esi-error-limit-reset") ?? "10");
+    errorBudgetPauseUntil = Date.now() + resetSeconds * 1000;
+  }
+
   if (!response.ok) {
     const text = await response.text();
     throw new EsiError(response.status, path, text.slice(0, 300));
   }
 
   const pages = Number(response.headers.get("x-pages") ?? "1");
-  return { data: (await response.json()) as T, pages };
+  const data = (await response.json()) as T;
+
+  if (isCacheable) {
+    const expiresHeader = response.headers.get("expires");
+    const expiresAt = expiresHeader ? new Date(expiresHeader).getTime() : 0;
+    if (expiresAt > Date.now()) {
+      responseCache.set(path, { data, pages, expiresAt });
+    }
+  }
+
+  return { data, pages };
 }
 
 // ---------- Name/ID resolution ----------
