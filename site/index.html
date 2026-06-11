@@ -57,6 +57,8 @@
   .ver { font-family: ui-monospace, Menlo, monospace; font-size: .85rem; color: var(--soft); }
   .rtitle { color: var(--white); font-weight: 600; margin: .25rem 0; }
   footer { margin-top: 5rem; border-top: 1px solid #1e293b; padding-top: 1.5rem; font-size: .875rem; color: #64748b; }
+  pre { overflow-x: auto; background: rgba(15,23,42,.6); border: 1px solid #1e293b; border-radius: 6px; padding: .9rem 1rem; font-size: .85rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Menlo, monospace; }
 </style>
 </head>
 <body>
@@ -86,6 +88,23 @@
     <li><span class="q">"Is this system safe? What is this worth? Where did my stuff go?"</span> — live danger intel, Jita prices, and an asset finder that locates things stranded in stations you forgot about years ago.</li>
   </ul>
   <p>It ships as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server, so it works with Claude Desktop, Claude Code, and any MCP-capable AI client. Built on the official ESI API, EVE SSO, and zKillboard. Free and open source (MIT).</p>
+
+  <h2>Install it (5 minutes, no coding)</h2>
+  <div class="rule" aria-hidden="true"></div>
+  <p>You need the <a href="https://claude.com/download">Claude Desktop app</a> and <a href="https://nodejs.org">Node.js</a> (free — download the LTS version and click through the installer).</p>
+  <ol>
+    <li><b>Download &amp; build:</b> open Terminal (Mac: Cmd+Space, type "Terminal") or PowerShell (Windows) and paste:
+      <pre><code>git clone https://github.com/henryjrobinson/eve-mentor-mcp
+cd eve-mentor-mcp
+npm install &amp;&amp; npm run build</code></pre></li>
+    <li><b>Tell Claude about it:</b> edit <code>claude_desktop_config.json</code> (Mac: <code>~/Library/Application Support/Claude/</code> · Windows: <code>%APPDATA%\Claude\</code>) and add:
+      <pre><code>{ "mcpServers": { "eve-mentor": {
+    "command": "node",
+    "args": ["/FULL/PATH/TO/eve-mentor-mcp/dist/index.js"] } } }</code></pre>
+      Then fully quit and reopen Claude.</li>
+    <li><b>Test:</b> ask Claude — <i>"Pull the last 3 losses for character &lt;your pilot&gt; and explain what went wrong."</i> No EVE login needed for that; the full step-by-step (including linking your character) is in the <a href="https://github.com/henryjrobinson/eve-mentor-mcp#install-no-coding-required">README</a>.</li>
+  </ol>
+  <p>Works with Claude Desktop, Claude Code, Cursor, LM Studio, and any MCP client. ChatGPT supports only remote MCP servers — a hosted version of the public tools is on the roadmap.</p>
 
   <h2>Roadmap</h2>
   <div class="rule" aria-hidden="true"></div>

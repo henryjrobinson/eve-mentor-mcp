@@ -26,9 +26,21 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 | `skill_queue` | SSO | What's training and when it finishes |
 | `top_skills` | SSO | Highest-trained skills |
 
-## Setup
+## Install (no coding required)
 
-Requires Node 18+.
+You need two things: the **Claude Desktop app** (or Claude Code) and **Node.js**, a free
+runtime that this server runs on — installing it is like installing any other app.
+
+### Step 1 — Install Node.js (skip if you have it)
+
+Go to [nodejs.org](https://nodejs.org), download the **LTS** version, run the installer,
+click through with the defaults. Done.
+
+### Step 2 — Download and build the server
+
+Open a terminal — on **Mac**: press `Cmd+Space`, type `Terminal`, hit Enter. On
+**Windows**: press the Windows key, type `PowerShell`, hit Enter. Then copy-paste this
+whole block and press Enter:
 
 ```bash
 git clone https://github.com/henryjrobinson/eve-mentor-mcp
@@ -36,26 +48,53 @@ cd eve-mentor-mcp
 npm install && npm run build
 ```
 
-### Public tools only (no EVE login)
+(If Windows says git isn't installed, get it from [git-scm.com](https://git-scm.com) —
+defaults are fine — or click the green **Code → Download ZIP** button on this page,
+unzip it, and run the `cd` + `npm` lines inside that folder.)
 
-**Claude Code:**
+When it finishes, note the folder's full path — run `pwd` (Mac) or `cd` (Windows) to
+print it. You'll paste it in the next step where it says `/FULL/PATH/TO/eve-mentor-mcp`.
 
-```bash
-claude mcp add eve-mentor -- node /path/to/eve-mentor-mcp/dist/index.js
-```
+### Step 3 — Tell Claude about it
 
-**Claude Desktop** (`claude_desktop_config.json`):
+**Claude Desktop:** open the config file in any text editor —
+
+- Mac: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+(If it doesn't exist, create it.) Make it look like this:
 
 ```json
 {
   "mcpServers": {
     "eve-mentor": {
       "command": "node",
-      "args": ["/path/to/eve-mentor-mcp/dist/index.js"]
+      "args": ["/FULL/PATH/TO/eve-mentor-mcp/dist/index.js"]
     }
   }
 }
 ```
+
+Save, then fully quit and reopen Claude Desktop.
+
+**Claude Code** (one line instead):
+
+```bash
+claude mcp add eve-mentor -- node /FULL/PATH/TO/eve-mentor-mcp/dist/index.js
+```
+
+### Step 4 — Test it
+
+Ask Claude: *"Pull the last 3 losses for character `<any EVE character name>` and explain
+what went wrong."* If it answers with real killmail data, you're live. No EVE login is
+needed for this — losses, system intel, prices, the career test, and the jargon glossary
+all work immediately.
+
+### Other AI apps
+
+Any MCP-capable client works the same way (Cursor, LM Studio, VS Code, etc. — point them
+at `node /path/dist/index.js`). **ChatGPT** supports MCP but only *remote* servers, not
+local ones — a hosted version of the public tools is on the roadmap.
 
 ### Character tools (EVE SSO)
 

@@ -8,13 +8,20 @@
     "eve-mentor-mcp": "dist/index.js"
   },
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henryjrobinson/eve-mentor-mcp.git"
+  },
+  "homepage": "https://ruby-eve.com",
+  "bugs": "https://github.com/henryjrobinson/eve-mentor-mcp/issues",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "smoke": "node dist/smoke.js"
+    "smoke": "node dist/smoke.js",
+    "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">=18"
