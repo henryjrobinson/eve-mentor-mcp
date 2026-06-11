@@ -47,6 +47,8 @@
   a:hover { text-decoration-color: var(--amber); }
   .cta { display: inline-block; margin-top: 1.5rem; padding: .85rem 1.4rem; min-height: 44px; border: 1px solid rgba(228,168,83,.5); border-radius: 6px; font-family: ui-monospace, Menlo, monospace; font-size: .9rem; text-decoration: none; }
   .cta:hover { border-color: var(--amber); background: rgba(228,168,83,.1); }
+  .portrait { width: 96px; height: 96px; border-radius: 50%; border: 2px solid rgba(228,168,83,.6); display: block; margin-bottom: 1.25rem; }
+  .caption { font-family: ui-monospace, Menlo, monospace; font-size: .75rem; color: var(--soft); margin-top: -0.5rem; }
   ul { padding-left: 1.1rem; }
   li { margin-top: 1rem; }
   .q { color: var(--amber); font-weight: 600; }
@@ -60,8 +62,10 @@
 <body>
 <div class="stars" aria-hidden="true"></div>
 <main>
+  <img class="portrait" src="/ruby-q.jpg" alt="Ruby Q — the EVE Online character this project is named after" width="96" height="96" />
   <p class="kicker">Open-source MCP server · MIT · 16 tools</p>
   <h1>EVE Mentor</h1>
+  <p class="caption">Named for Ruby Q — born 2011, 0 kills, 8 losses, finally learning to fly.</p>
   <p class="lede">An AI mentor for New Eden's learning cliff. It connects Claude to live EVE Online data — your real losses, your real skills, the real market — so you can finally just <em>ask</em> the game how to play it.</p>
   <p><a class="cta" href="https://github.com/henryjrobinson/eve-mentor-mcp">Get it on GitHub →</a></p>
 

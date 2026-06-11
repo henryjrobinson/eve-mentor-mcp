@@ -110,6 +110,36 @@ Story/roadmap: https://ruby-eve.com
 
 ---
 
+## Hacker News (Show HN)
+
+**Title:** Show HN: EVE Mentor — an open-source AI mentor for EVE Online (MCP server)
+
+**URL:** https://github.com/henryjrobinson/eve-mentor-mcp
+
+**First comment (post immediately after submitting):**
+
+I've played EVE Online on and off since 2011 and my lifetime record is 0 kills and 8
+losses. EVE's learning curve is famous (players call it a cliff), and the existing
+third-party tools are all built by veterans for veterans.
+
+This is a TypeScript MCP server that gives Claude (or any MCP client) live EVE data with
+judgment baked in: it pulls your real lossmails from zKillboard and detects fitting
+mistakes mechanically (mixed weapon systems, mixed tank, no propulsion), resolves the
+recursive skill-prerequisite tree ESI only exposes one level of, and diffs it against your
+character via SSO (PKCE, read-only scopes, tokens stay local).
+
+The design lesson that surprised me: the MCP plumbing is trivial — the value is choosing
+which questions to make answerable and pre-computing the judgment so the LLM can't
+hallucinate it. CCP's own in-game AI assistant launched this year deliberately refusing to
+give fitting/strategy advice after hallucination problems; tool-grounded answers are the
+workaround.
+
+On its first authenticated session it found assets I lost access to in 2018 (EVE's "asset
+safety" system, which the game never explains) and showed me I'd accumulated 17M
+skillpoints and 702M ISK across fifteen years of quitting. Site: https://ruby-eve.com
+
+---
+
 ## EVE Online forums post (Third Party Developers)
 
 **Title: eve-mentor-mcp — open-source MCP server that turns Claude into a new-player mentor**
