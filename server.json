@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.henryjrobinson/eve-mentor-mcp",
+  "description": "An AI mentor for EVE Online: explains your real losses from zKillboard, plans skill training against your actual character, checks fits for classic mistakes, and sorts you into a playstyle. Built for new and returning players.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/henryjrobinson/eve-mentor-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://ruby-eve.com",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "eve-mentor-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EVE_CLIENT_ID",
+          "description": "EVE developer application client ID (only needed for character tools; public tools work without it)",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}
