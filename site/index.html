@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EVE Mentor — an open-source AI mentor for EVE Online</title>
+<meta name="description" content="An open-source MCP server that turns Claude into an EVE Online mentor: it explains your real losses, plans your skills, finds your stranded assets, and sorts you into a playstyle." />
+<style>
+  :root {
+    --bg: #060913;
+    --text: #cbd5e1;
+    --soft: #94a3b8;
+    --white: #f8fafc;
+    --amber: #e4a853;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text);
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 70% -10%, rgba(228,168,83,.16), transparent 60%),
+      radial-gradient(ellipse 60% 45% at 15% 25%, rgba(42,157,143,.13), transparent 65%),
+      radial-gradient(ellipse 70% 55% at 85% 75%, rgba(99,102,241,.12), transparent 60%);
+    background-attachment: fixed;
+  }
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; background-repeat: repeat;
+    background-image:
+      radial-gradient(1.5px 1.5px at 25px 35px, rgba(255,255,255,.9), transparent),
+      radial-gradient(1px 1px at 110px 80px, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 190px 150px, rgba(228,168,83,.8), transparent),
+      radial-gradient(1px 1px at 60px 170px, rgba(255,255,255,.6), transparent),
+      radial-gradient(2px 2px at 150px 40px, rgba(135,206,235,.8), transparent);
+    background-size: 220px 200px;
+  }
+  main { position: relative; max-width: 42rem; margin: 0 auto; padding: 4rem 1.25rem 5rem; }
+  .kicker { font-family: ui-monospace, Menlo, monospace; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--amber); }
+  h1 { color: var(--white); font-size: clamp(2.2rem, 5vw, 3rem); margin: .75rem 0 0; letter-spacing: -.01em; }
+  h2 { color: var(--white); font-size: 1.25rem; margin: 4rem 0 0; }
+  h2 + .rule { height: 1px; width: 6rem; margin-top: .5rem; background: linear-gradient(90deg, rgba(228,168,83,.9), rgba(228,168,83,0)); }
+  .lede { font-size: 1.125rem; margin-top: 1rem; }
+  a { color: var(--amber); text-decoration-color: rgba(228,168,83,.4); text-underline-offset: 4px; }
+  a:hover { text-decoration-color: var(--amber); }
+  .cta { display: inline-block; margin-top: 1.5rem; padding: .85rem 1.4rem; min-height: 44px; border: 1px solid rgba(228,168,83,.5); border-radius: 6px; font-family: ui-monospace, Menlo, monospace; font-size: .9rem; text-decoration: none; }
+  .cta:hover { border-color: var(--amber); background: rgba(228,168,83,.1); }
+  ul { padding-left: 1.1rem; }
+  li { margin-top: 1rem; }
+  .q { color: var(--amber); font-weight: 600; }
+  ol.roadmap { list-style: none; padding: 0; }
+  ol.roadmap li { border-left: 1px solid #334155; padding-left: 1.25rem; margin-top: 1.5rem; }
+  .ver { font-family: ui-monospace, Menlo, monospace; font-size: .85rem; color: var(--soft); }
+  .rtitle { color: var(--white); font-weight: 600; margin: .25rem 0; }
+  footer { margin-top: 5rem; border-top: 1px solid #1e293b; padding-top: 1.5rem; font-size: .875rem; color: #64748b; }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main>
+  <p class="kicker">Open-source MCP server · MIT · 16 tools</p>
+  <h1>EVE Mentor</h1>
+  <p class="lede">An AI mentor for New Eden's learning cliff. It connects Claude to live EVE Online data — your real losses, your real skills, the real market — so you can finally just <em>ask</em> the game how to play it.</p>
+  <p><a class="cta" href="https://github.com/henryjrobinson/eve-mentor-mcp">Get it on GitHub →</a></p>
+
+  <h2>Why I built this</h2>
+  <div class="rule" aria-hidden="true"></div>
+  <p>EVE Online is the deepest sandbox in gaming and the hardest one to learn. Players say it best: <em>"In EVE, you don't have a learning curve, you have a cliff."</em> Of every 10,000 new pilots, fewer than 500 are still logging in a month later. The knowledge exists, but it lives in wikis, veteran Discord servers, and a dozen third-party tools that all assume you already understand the game.</p>
+  <p>I created my character in August 2011. My lifetime record across fifteen years is 0 kills and 8 losses. I would resubscribe about once a year, play for a month, hit a wall that nobody explained, and quit. The walls were always the same. In 2015 I lost two cruisers in one day, the second one in Uedama, which I later learned is the most notorious gank chokepoint in the game (every veteran knows this; no tutorial mentions it). In 2018 I lost a destroyer that I had fitted with railguns, artillery, and blasters at the same time, three weapon systems from three different races on one hull. Nobody told me why that couldn't work. One year I came back, couldn't dock where I had left all my stuff, got no answer I understood, and cancelled again.</p>
+  <p>So I built the mentor I needed. On its first real session it pulled my losses from zKillboard and explained each death, told me the exploration frigate I always wanted was 16,000 skillpoints away (about ten hours of training), and found my lost property sitting in two asset-safety wraps that had been waiting for me for years. The docking mystery turned out to be a player-structure lockout, which the game also never explains.</p>
+  <p>That first session revealed one more thing: across all those failed attempts, past-me had quietly accumulated 17 million skillpoints and 702 million ISK. It turned out I was a mid-tier veteran who could never find the door, not a failed newbie. I suspect EVE is full of players like me, and this tool is for all of us.</p>
+
+  <h2>What it does</h2>
+  <div class="rule" aria-hidden="true"></div>
+  <ul>
+    <li><span class="q">"Why do I keep dying?"</span> — it pulls your actual losses from zKillboard, fit by fit, and explains what went wrong and what to change.</li>
+    <li><span class="q">"What do I need to fly a Vexor?"</span> — the full skill chain, in training order, with time estimates, diffed against the skills you actually have.</li>
+    <li><span class="q">"What should I even be doing?"</span> — a sorting-hat interview that matches you to one of 15 career paths based on how you actually like to play and how much time you have.</li>
+    <li><span class="q">"What's the cheapest way to play?"</span> — Alpha vs Omega vs PLEX explained with today's real market numbers and an honest grind-hours-vs-cash answer.</li>
+    <li><span class="q">"Is this system safe? What is this worth? Where did my stuff go?"</span> — live danger intel, Jita prices, and an asset finder that locates things stranded in stations you forgot about years ago.</li>
+  </ul>
+  <p>It ships as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server, so it works with Claude Desktop, Claude Code, and any MCP-capable AI client. Built on the official ESI API, EVE SSO, and zKillboard. Free and open source (MIT).</p>
+
+  <h2>Roadmap</h2>
+  <div class="rule" aria-hidden="true"></div>
+  <ol class="roadmap">
+    <li><span class="ver">v0.1 · ✅ Shipped</span><p class="rtitle">Loss mentor</p>Real losses from zKillboard with full fit detail, system danger intel, Jita prices, EVE SSO.</li>
+    <li><span class="ver">v0.2 · ✅ Shipped</span><p class="rtitle">"Can I fly it?" + career sorting hat</p>Recursive skill-prerequisite plans diffed against your character, 15-path career matching, stranded-asset finder.</li>
+    <li><span class="ver">v0.3 · ✅ Shipped</span><p class="rtitle">Fitting &amp; combat coach</p>Mechanical fit checking, ammo damage-type matching per faction, slang glossary, session sitrep, live PLEX economics.</li>
+    <li><span class="ver">v0.4 · ○ Planned</span><p class="rtitle">Direction &amp; ISK</p>"What should I do tonight?" matched to your skills, ship, location, and risk appetite.</li>
+    <li><span class="ver">v0.5 · ○ Planned</span><p class="rtitle">Safety, logistics &amp; news</p>Route danger scoring, where to buy sensibly, and a "what happened while you were gone" briefing.</li>
+  </ol>
+
+  <h2>Follow along</h2>
+  <div class="rule" aria-hidden="true"></div>
+  <p>Built by <a href="https://henryrobinson.net">Henry Robinson</a>. Questions, ideas, or want to test-fly it? <a href="mailto:henryjrobinson@gmail.com">Get in touch</a>.</p>
+
+  <footer>
+    EVE Online and the EVE logo are the registered trademarks of CCP hf. All rights are reserved worldwide. This is a community-made, non-commercial project built under the CCP Developer License and is not affiliated with, endorsed by, or sponsored by CCP hf.
+  </footer>
+</main>
+</body>
+</html>
