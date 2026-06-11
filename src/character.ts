@@ -4,6 +4,7 @@
 
 import { getSession } from "./auth.js";
 import { esiFetch, getSystem, getType, namesForIds } from "./esi.js";
+import { characterPortraitUrl, typeRenderUrl } from "./images.js";
 
 interface SkillsResponse {
   total_sp: number;
@@ -25,6 +26,8 @@ export async function getCharacterSheet(): Promise<{
   location: string;
   locationSecurity: number;
   currentShip: string;
+  portraitUrl: string;
+  currentShipRenderUrl: string;
 }> {
   const { accessToken, characterId } = await getSession();
   const authed = { token: accessToken };
@@ -50,6 +53,8 @@ export async function getCharacterSheet(): Promise<{
     location: system.name,
     locationSecurity: Number(system.security_status.toFixed(1)),
     currentShip: shipType.name,
+    portraitUrl: characterPortraitUrl(characterId),
+    currentShipRenderUrl: typeRenderUrl(ship.data.ship_type_id),
   };
 }
 

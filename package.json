@@ -1,7 +1,7 @@
 {
   "name": "eve-mentor-mcp",
-  "version": "0.1.0",
-  "description": "MCP server that turns Claude into an EVE Online mentor — analyzes your losses, knows your character, and helps you learn the game.",
+  "version": "0.1.1",
+  "description": "MCP server that turns Claude into an EVE Online mentor \u2014 analyzes your losses, knows your character, and helps you learn the game.",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -41,5 +41,6 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "typescript": "^5.6.0"
-  }
+  },
+  "mcpName": "io.github.henryjrobinson/eve-mentor-mcp"
 }

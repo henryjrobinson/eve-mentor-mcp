@@ -13,6 +13,7 @@ import {
   slotForFlag,
   type Killmail,
 } from "./esi.js";
+import { characterPortraitUrl, typeRenderUrl } from "./images.js";
 
 const ZKILL_BASE = "https://zkillboard.com/api";
 const USER_AGENT = "eve-mentor-mcp/0.1.0 (https://github.com/henryjrobinson/eve-mentor-mcp)";
@@ -48,7 +49,8 @@ export interface LossReport {
   killedByNpc: boolean;
   damageTaken: number;
   attackerCount: number;
-  finalBlow: { pilot: string; ship: string; weapon: string };
+  shipRenderUrl: string;
+  finalBlow: { pilot: string; ship: string; weapon: string; pilotPortraitUrl?: string };
   fit: Record<string, string[]>;
 }
 
@@ -107,10 +109,14 @@ async function buildLossReport(entry: ZkillEntry, killmail: Killmail): Promise<L
     killedByNpc: entry.zkb.npc,
     damageTaken: killmail.victim.damage_taken,
     attackerCount: killmail.attackers.length,
+    shipRenderUrl: typeRenderUrl(killmail.victim.ship_type_id),
     finalBlow: {
       pilot: nameOf(finalBlowAttacker?.character_id),
       ship: nameOf(finalBlowAttacker?.ship_type_id),
       weapon: nameOf(finalBlowAttacker?.weapon_type_id),
+      ...(finalBlowAttacker?.character_id
+        ? { pilotPortraitUrl: characterPortraitUrl(finalBlowAttacker.character_id, 128) }
+        : {}),
     },
     fit,
   };
