@@ -89,20 +89,16 @@
   </ul>
   <p>It ships as a <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server, so it works with Claude Desktop, Claude Code, and any MCP-capable AI client. Built on the official ESI API, EVE SSO, and zKillboard. Free and open source (MIT).</p>
 
-  <h2>Install it (5 minutes, no coding)</h2>
+  <h2>Install it (2 minutes, no coding)</h2>
   <div class="rule" aria-hidden="true"></div>
-  <p>You need the <a href="https://claude.com/download">Claude Desktop app</a> and <a href="https://nodejs.org">Node.js</a> (free — download the LTS version and click through the installer).</p>
+  <p>You need the <a href="https://claude.com/download">Claude Desktop app</a> and <a href="https://nodejs.org">Node.js</a> (free — download the LTS version and click through the installer). No downloads or terminal commands beyond that.</p>
   <ol>
-    <li><b>Download &amp; build:</b> open Terminal (Mac: Cmd+Space, type "Terminal") or PowerShell (Windows) and paste:
-      <pre><code>git clone https://github.com/henryjrobinson/eve-mentor-mcp
-cd eve-mentor-mcp
-npm install &amp;&amp; npm run build</code></pre></li>
-    <li><b>Tell Claude about it:</b> edit <code>claude_desktop_config.json</code> (Mac: <code>~/Library/Application Support/Claude/</code> · Windows: <code>%APPDATA%\Claude\</code>) and add:
+    <li><b>Tell Claude about it:</b> edit <code>claude_desktop_config.json</code> (Mac: <code>~/Library/Application Support/Claude/</code> · Windows: <code>%APPDATA%\Claude\</code> — create the file if it doesn't exist) and make it:
       <pre><code>{ "mcpServers": { "eve-mentor": {
-    "command": "node",
-    "args": ["/FULL/PATH/TO/eve-mentor-mcp/dist/index.js"] } } }</code></pre>
-      Then fully quit and reopen Claude.</li>
-    <li><b>Test:</b> ask Claude — <i>"Pull the last 3 losses for character &lt;your pilot&gt; and explain what went wrong."</i> No EVE login needed for that; the full step-by-step (including linking your character) is in the <a href="https://github.com/henryjrobinson/eve-mentor-mcp#install-no-coding-required">README</a>.</li>
+    "command": "npx",
+    "args": ["-y", "eve-mentor-mcp"] } } }</code></pre>
+      Then fully quit and reopen Claude. It fetches the server from npm automatically.</li>
+    <li><b>Test:</b> ask Claude — <i>"Pull the last 3 losses for character &lt;your pilot&gt; and explain what went wrong."</i> No EVE login needed for that; linking your character (skills, assets, sitrep) is a 5-minute extra in the <a href="https://github.com/henryjrobinson/eve-mentor-mcp#install-no-coding-required">README</a>.</li>
   </ol>
   <p>Works with Claude Desktop, Claude Code, Cursor, LM Studio, and any MCP client. ChatGPT supports only remote MCP servers — a hosted version of the public tools is on the roadmap.</p>
 

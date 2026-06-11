@@ -36,26 +36,7 @@ runtime that this server runs on — installing it is like installing any other 
 Go to [nodejs.org](https://nodejs.org), download the **LTS** version, run the installer,
 click through with the defaults. Done.
 
-### Step 2 — Download and build the server
-
-Open a terminal — on **Mac**: press `Cmd+Space`, type `Terminal`, hit Enter. On
-**Windows**: press the Windows key, type `PowerShell`, hit Enter. Then copy-paste this
-whole block and press Enter:
-
-```bash
-git clone https://github.com/henryjrobinson/eve-mentor-mcp
-cd eve-mentor-mcp
-npm install && npm run build
-```
-
-(If Windows says git isn't installed, get it from [git-scm.com](https://git-scm.com) —
-defaults are fine — or click the green **Code → Download ZIP** button on this page,
-unzip it, and run the `cd` + `npm` lines inside that folder.)
-
-When it finishes, note the folder's full path — run `pwd` (Mac) or `cd` (Windows) to
-print it. You'll paste it in the next step where it says `/FULL/PATH/TO/eve-mentor-mcp`.
-
-### Step 3 — Tell Claude about it
+### Step 2 — Tell Claude about it (no download needed)
 
 **Claude Desktop:** open the config file in any text editor —
 
@@ -68,22 +49,35 @@ print it. You'll paste it in the next step where it says `/FULL/PATH/TO/eve-ment
 {
   "mcpServers": {
     "eve-mentor": {
-      "command": "node",
-      "args": ["/FULL/PATH/TO/eve-mentor-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "eve-mentor-mcp"]
     }
   }
 }
 ```
 
-Save, then fully quit and reopen Claude Desktop.
+Save, then fully quit and reopen Claude Desktop. That's it — `npx` downloads and runs the
+server automatically; updates come free.
 
 **Claude Code** (one line instead):
 
 ```bash
-claude mcp add eve-mentor -- node /FULL/PATH/TO/eve-mentor-mcp/dist/index.js
+claude mcp add eve-mentor -- npx -y eve-mentor-mcp
 ```
 
-### Step 4 — Test it
+<details>
+<summary>Developing or self-building instead? (clone &amp; build)</summary>
+
+```bash
+git clone https://github.com/henryjrobinson/eve-mentor-mcp
+cd eve-mentor-mcp
+npm install && npm run build
+```
+
+Then point your MCP client at `node /FULL/PATH/TO/eve-mentor-mcp/dist/index.js`.
+</details>
+
+### Step 3 — Test it
 
 Ask Claude: *"Pull the last 3 losses for character `<any EVE character name>` and explain
 what went wrong."* If it answers with real killmail data, you're live. No EVE login is
@@ -113,7 +107,7 @@ local ones — a hosted version of the public tools is on the roadmap.
 5. Copy the **Client ID** and add it to the server's environment:
 
 ```bash
-claude mcp add eve-mentor -e EVE_CLIENT_ID=your_client_id -- node /path/to/eve-mentor-mcp/dist/index.js
+claude mcp add eve-mentor -e EVE_CLIENT_ID=your_client_id -- npx -y eve-mentor-mcp
 ```
 
 (or add `"env": {"EVE_CLIENT_ID": "your_client_id"}` to the Claude Desktop config.)
