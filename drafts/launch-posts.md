@@ -46,7 +46,7 @@ million skillpoints and 702 million ISK. I was never a failed newbie. I was a mi
 veteran who couldn't find the door.
 
 The whole thing is free and MIT-licensed: https://github.com/henryjrobinson/eve-mentor-mcp
-The story and roadmap live at https://henryrobinson.net/eve-mcp
+The story and roadmap live at https://ruby-eve.com
 
 I suspect New Eden is full of players like me. This one is for all of us.
 
@@ -76,7 +76,7 @@ an asset finder for stuff you lost years ago.
 
 6/ Free, MIT, built on the official ESI API. Repo:
 https://github.com/henryjrobinson/eve-mentor-mcp
-Story: https://henryrobinson.net/eve-mcp
+Story: https://ruby-eve.com
 Feedback wanted, especially from people who bounced off EVE like I did. @EveOnline
 
 ---
@@ -106,7 +106,7 @@ strong opinions about both AI and new-player tools, and I'd genuinely like the f
 especially on what a tool like this should never advise a newbie to do.
 
 Repo: https://github.com/henryjrobinson/eve-mentor-mcp
-Story/roadmap: https://henryrobinson.net/eve-mcp
+Story/roadmap: https://ruby-eve.com
 
 ---
 

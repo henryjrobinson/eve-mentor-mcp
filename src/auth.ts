@@ -20,8 +20,7 @@ const CALLBACK_URL = `http://localhost:${CALLBACK_PORT}/callback`;
 // ...but CCP's dev portal only accepts https callback URLs, so the registered
 // redirect is a static relay page that immediately forwards the query string
 // to the local listener. Override with EVE_REDIRECT_URI if self-hosting one.
-const REDIRECT_URI =
-  process.env.EVE_REDIRECT_URI ?? "https://henryrobinson.net/eve-mcp/callback";
+const REDIRECT_URI = process.env.EVE_REDIRECT_URI ?? "https://ruby-eve.com/callback";
 const LOGIN_TIMEOUT_MS = 180_000;
 const TOKEN_DIR = join(homedir(), ".config", "eve-mentor");
 const TOKEN_FILE = join(TOKEN_DIR, "tokens.json");
