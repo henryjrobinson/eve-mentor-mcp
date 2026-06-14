@@ -1,0 +1,26 @@
+# Smithery configuration: https://smithery.ai/docs/config#smitheryyaml
+# Tells Smithery how to launch eve-mentor-mcp (published on npm) over stdio.
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema for the config Smithery collects from the user.
+    type: object
+    required: []
+    properties:
+      eveClientId:
+        type: string
+        title: EVE_CLIENT_ID
+        description: >-
+          Optional. EVE developer-application Client ID from
+          https://developers.eveonline.com — only needed for the character tools
+          (skills, skill queue, assets, sitrep, what_should_i_do_tonight). The
+          public tools (losses, prices, fits, ammo, ISK guidance, route danger,
+          where to buy, corp checks) all work without it.
+  commandFunction:
+    # Produces the CLI command Smithery runs to start the server on stdio.
+    |-
+    (config) => ({
+      command: 'npx',
+      args: ['-y', 'eve-mentor-mcp'],
+      env: config.eveClientId ? { EVE_CLIENT_ID: config.eveClientId } : {}
+    })
