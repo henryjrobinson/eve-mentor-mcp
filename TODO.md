@@ -38,9 +38,13 @@ All four live in [drafts/launch-posts.md](drafts/launch-posts.md). Suggested ord
 - [x] `fit_readiness` — paste any EFT fit → missing skills + training time (backlog #2) ✅
 - [x] `proven_fits <ship>` — most common modules per slot from real killmails (backlog #3) ✅
 - [x] `what_should_i_do_tonight` (backlog #4) + `isk_guidance` (backlog #5) ✅ — v0.4 shipped
-- [ ] npm publish for `npx eve-mentor-mcp` install (backlog #11)
-- [ ] Registry submissions: official MCP registry, Smithery, Glama, CCP tool directory (backlog #12)
-- [ ] Redirect/pointer from henryrobinson.net/eve-mcp → ruby-eve.com
+- [x] `route_danger`, `where_to_buy`, `whats_happening`, `evaluate_corp` (backlog #7-10) ✅ — v0.5 shipped
+- [x] Pilot memory: `remember_goal` / `recall_pilot_notes` (backlog #6) ✅
+- [x] npm publish — `eve-mentor-mcp@0.1.2` live (backlog #11) ✅
+- [x] Official MCP registry — `io.github.henryjrobinson/eve-mentor-mcp` active (backlog #12) ✅
+- [x] Smithery — `smithery.yaml` in repo; Smithery + Glama auto-index from GitHub + registry ⏳ (claim listings ~1-2 wks out)
+- [x] CCP community tools list — PR to esi/esi-docs #290 (awaiting merge) ✅
+- [x] Redirect henryrobinson.net/eve-mcp → ruby-eve.com (301, Netlify; callback preserved) ✅
 - [ ] EVE Partnership Program application once user traction exists (backlog #15)
 
 ## Dev portal app description (paste-ready)
