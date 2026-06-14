@@ -22,6 +22,8 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 | `analyze_fit` | none | Mechanical fit check: classifies modules and flags classic mistakes (mixed weapons/tank, no propulsion, dead damage mods) |
 | `ammo_advisor` | none | Which damage type to shoot and tank against a faction or enemy tank, with concrete ammo names |
 | `career_test` | none | The EVE career "sorting hat" — Claude interviews you, then matches you to playstyles |
+| `isk_guidance` | none | Viable income activities by skillpoint tier, with honest ISK/hr ranges and first steps |
+| `what_should_i_do_tonight` | SSO | Composes your real skills/wallet/location/ship into concrete session suggestions |
 | `system_intel` | none | Security status + kills/jumps in the last hour for any system |
 | `lookup_item` | none | Item/ship/module description + live Jita buy/sell prices |
 | `cheapest_way_to_play` | none | Alpha vs Omega vs PLEX economics with today's live Jita PLEX price |
@@ -145,10 +147,10 @@ npm run smoke -- "Pilot Name"      # also tests the zKillboard loss pipeline
 
 ## Roadmap
 
-Shipped through v0.3 (loss analysis, "can I fly it?", career sorting hat, fitting & combat coaching). Next:
+Shipped through v0.4 (loss analysis, "can I fly it?", career sorting hat, fitting & combat coaching, direction & ISK guidance). Next:
 
-- **v0.4 — Direction & ISK:** "what should I do tonight?" matched to your skills/ship/location, income guidance by skillpoint tier
 - **v0.5 — Safety, logistics & news:** route danger scoring, where to buy sensibly, a "what happened while you were gone" briefing
+- Pilot memory so goals persist across sessions
 - Remote MCP deployment so no local install is needed (and ChatGPT support)
 
 Full detail in [ROADMAP.md](ROADMAP.md). PRs welcome. MIT licensed.

@@ -33,15 +33,22 @@ missing skills in training order, total days.
 
 ## v0.4 — direction & ISK
 
-### 4. `what_should_i_do_tonight` `[live-api]`
+### 4. `what_should_i_do_tonight` `[live-api]` — ✅ DONE
 Compose: character skills + wallet + location + ship + career-test result (if stored) →
 3 concrete session suggestions with expected ISK and risk. Uses careers data + can_i_fly.
-- Accept: returns suggestions that reference the character's actual situation, not generic advice.
+- Shipped: `getTonightOptions()` in `src/tonight.ts` — composes character_sheet + skill
+  queue + the income tier + location/wallet context, returns building blocks for the client
+  to synthesize 2-3 suggestions. (career_test result is held in conversation, not stored yet —
+  that's pilot memory, #6.)
+- Verified live against Ruby Q: 17.3M SP → "Competent" tier, Auga 0.4 → low-sec context,
+  702M wallet → "healthy" framing. All composition fields correct.
 
-### 5. `isk_guidance` — income matched to skillpoints
+### 5. `isk_guidance` — income matched to skillpoints — ✅ DONE
 Knowledge tool: viable income activities by SP tier (0-1M, 1-5M, 5-20M, 20M+) with ISK/hr
 ranges and first steps. Static data, research-sourced (EVE Uni + r/Eve consensus).
-- Accept: every tier has ≥3 activities with honest ISK/hr ranges and requirements.
+- Shipped: `src/income.ts` (`getIskGuidance`, `tierForSkillpoints`). Every tier has ≥3
+  activities (4/4/4/5) with ISK/hr ranges, requirements, and first steps; a prominent
+  disclaimer frames the numbers as relative community consensus, not live data.
 
 ### 6. Pilot memory tools
 `remember_goal`, `recall_pilot_notes` — persistent JSON at ~/.config/eve-mentor/memory.json.

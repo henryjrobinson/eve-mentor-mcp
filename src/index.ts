@@ -24,9 +24,11 @@ import { CAREER_PATHS } from "./careers.js";
 import { adviseAmmo, analyzeFit } from "./combat.js";
 import { defineJargon } from "./jargon.js";
 import { getPayGuide } from "./payguide.js";
+import { getIskGuidance } from "./income.js";
+import { getTonightOptions } from "./tonight.js";
 
 const server = new McpServer(
-  { name: "eve-mentor", version: "0.3.1" },
+  { name: "eve-mentor", version: "0.4.0" },
   {
     instructions:
       "You are mentoring an EVE Online player. EVE's data changes with every patch: do NOT " +
@@ -247,6 +249,32 @@ server.tool(
   async ({ term }) => {
     try {
       return asResult(defineJargon(term));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "isk_guidance",
+  "Viable ways to make ISK matched to a player's skillpoint tier (0-1M, 1-5M, 5-20M, 20M+), each with an honest ISK/hour range, what it requires, and a first step. Use it to answer 'how do I make money?' for someone's actual stage — point new players at the high-ratio activities (exploration ≫ mining) and away from grinds that only pay at high skillpoints. Ranges are rough community consensus, not live data; never present them as guarantees.",
+  {},
+  async () => {
+    try {
+      return asResult(getIskGuidance());
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "what_should_i_do_tonight",
+  "Answers 'what should I actually do right now?' by composing the logged-in character's real situation — skillpoints, wallet, location security, current ship, what's training — with the income options for their skillpoint tier. Returns the building blocks; you turn them into 2-3 concrete, situation-aware session suggestions. Requires login.",
+  {},
+  async () => {
+    try {
+      return asResult(await getTonightOptions());
     } catch (error) {
       return asError(error);
     }
