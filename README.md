@@ -15,16 +15,24 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 
 | Tool | Auth | What it does |
 |------|------|--------------|
-| `can_i_fly` | optional | Full recursive skill prerequisite tree + ordered training plan for any ship/module; diffed against your real skills when logged in |
-| `career_test` | none | The EVE career "sorting hat" — Claude interviews you, then matches you to playstyles |
 | `recent_losses` | none | A character's recent losses with full fit detail (zKillboard + ESI) |
+| `can_i_fly` | optional | Full recursive skill prerequisite tree + ordered training plan for any ship/module; diffed against your real skills when logged in |
+| `fit_readiness` | optional | Paste an EFT fit → can-fly verdict: missing skills to online every module, in training order, with total time |
+| `proven_fits` | none | What pilots actually fly on a ship — the most common modules per slot, learned from recent killmails |
+| `analyze_fit` | none | Mechanical fit check: classifies modules and flags classic mistakes (mixed weapons/tank, no propulsion, dead damage mods) |
+| `ammo_advisor` | none | Which damage type to shoot and tank against a faction or enemy tank, with concrete ammo names |
+| `career_test` | none | The EVE career "sorting hat" — Claude interviews you, then matches you to playstyles |
 | `system_intel` | none | Security status + kills/jumps in the last hour for any system |
 | `lookup_item` | none | Item/ship/module description + live Jita buy/sell prices |
+| `cheapest_way_to_play` | none | Alpha vs Omega vs PLEX economics with today's live Jita PLEX price |
+| `jargon` | none | EVE slang glossary — define a term or list everything known |
+| `sitrep` | optional | One-call session-start orientation: login state, character overview, what's training, last loss |
 | `eve_login` | — | Browser-based EVE SSO login (OAuth2 PKCE, no secret stored) |
 | `eve_auth_status` | — | Who's logged in |
 | `character_sheet` | SSO | Skillpoints, wallet, location, current ship |
 | `skill_queue` | SSO | What's training and when it finishes |
 | `top_skills` | SSO | Highest-trained skills |
+| `my_assets` | SSO | Everything you own grouped by location, flagging stranded/asset-safety items |
 
 ## Install (no coding required)
 
@@ -137,10 +145,10 @@ npm run smoke -- "Pilot Name"      # also tests the zKillboard loss pipeline
 
 ## Roadmap
 
-- Ship fitting analysis (slot layout vs. ship bonuses)
-- "What can I fly?" — cross-reference skills against ship prerequisites
-- Route danger scoring (per-jump kill activity)
-- Wormhole / exploration helpers
-- Remote MCP deployment so no local install is needed
+Shipped through v0.3 (loss analysis, "can I fly it?", career sorting hat, fitting & combat coaching). Next:
 
-PRs welcome. MIT licensed.
+- **v0.4 — Direction & ISK:** "what should I do tonight?" matched to your skills/ship/location, income guidance by skillpoint tier
+- **v0.5 — Safety, logistics & news:** route danger scoring, where to buy sensibly, a "what happened while you were gone" briefing
+- Remote MCP deployment so no local install is needed (and ChatGPT support)
+
+Full detail in [ROADMAP.md](ROADMAP.md). PRs welcome. MIT licensed.

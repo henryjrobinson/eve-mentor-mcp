@@ -17,15 +17,16 @@ import {
   getType,
   resolveNames,
 } from "./esi.js";
-import { getRecentLosses } from "./zkill.js";
-import { flightPlan } from "./skills.js";
+import { getProvenFits, getRecentLosses } from "./zkill.js";
+import { fitReadiness, flightPlan } from "./skills.js";
+import { parseEft } from "./eft.js";
 import { CAREER_PATHS } from "./careers.js";
 import { adviseAmmo, analyzeFit } from "./combat.js";
 import { defineJargon } from "./jargon.js";
 import { getPayGuide } from "./payguide.js";
 
 const server = new McpServer(
-  { name: "eve-mentor", version: "0.3.0" },
+  { name: "eve-mentor", version: "0.3.1" },
   {
     instructions:
       "You are mentoring an EVE Online player. EVE's data changes with every patch: do NOT " +
@@ -163,6 +164,63 @@ server.tool(
   async ({ module_names }) => {
     try {
       return asResult(await analyzeFit(module_names));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "fit_readiness",
+  "Paste an EFT-format fit (the text every fitting site, PyFA, and the in-game fitting window export) and get a can-fly verdict: which skills are missing to online every module and the hull, in training order, with total skillpoints and days. Personalized against the logged-in character; when not logged in it lists every skill the fit requires.",
+  { fit: z.string().describe("EFT-format fit text, starting with a header line like [Heron, My Fit]") },
+  async ({ fit }) => {
+    try {
+      const parsed = parseEft(fit);
+      if (!parsed.shipName) {
+        return asError(
+          "Couldn't find a ship — EFT fits start with a header line like [Heron, My Fit].",
+        );
+      }
+      const resolved = await resolveNames([parsed.shipName, ...parsed.moduleNames]);
+      const byName = new Map(
+        (resolved.inventory_types ?? []).map((type) => [type.name.toLowerCase(), type]),
+      );
+      const ship = byName.get(parsed.shipName.toLowerCase());
+      if (!ship) {
+        return asError(`Ship "${parsed.shipName}" not found — names must be exact.`);
+      }
+      const moduleTypeIds = [
+        ...new Set(
+          parsed.moduleNames
+            .map((name) => byName.get(name.toLowerCase())?.id)
+            .filter((id): id is number => id !== undefined),
+        ),
+      ];
+      const unresolved = parsed.moduleNames.filter((name) => !byName.has(name.toLowerCase()));
+      return asResult(await fitReadiness([ship.id, ...moduleTypeIds], ship.name, unresolved));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "proven_fits",
+  "What modules pilots actually fly on a given ship, learned from recent killmails: the most common modules per slot with how often each appears. Use it to propose a realistic starter fit, then sanity-check that fit with analyze_fit and can_i_fly.",
+  {
+    ship_name: z.string().describe('Exact ship name, e.g. "Heron" or "Vexor"'),
+    sample: z
+      .number()
+      .int()
+      .min(5)
+      .max(40)
+      .default(25)
+      .describe("How many recent killmails to learn from (5-40)"),
+  },
+  async ({ ship_name, sample }) => {
+    try {
+      return asResult(await getProvenFits(ship_name, sample));
     } catch (error) {
       return asError(error);
     }

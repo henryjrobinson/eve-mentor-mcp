@@ -78,6 +78,93 @@ export async function getRecentLosses(
   );
 }
 
+export interface ProvenFits {
+  ship: string;
+  killmailsSampled: number;
+  commonModulesBySlot: Record<
+    string,
+    { module: string; pctOfFits: number; seenInFits: number }[]
+  >;
+  note: string;
+}
+
+const FITTED_SLOTS = new Set(["high slot", "mid slot", "low slot", "rig", "drone bay"]);
+const MODULES_PER_SLOT = 6;
+
+/** Count how many distinct fits each module appears in (any quantity counts once). */
+function tallyModulePresence(killmails: Killmail[]): Map<string, Map<number, number>> {
+  const bySlot = new Map<string, Map<number, number>>();
+  for (const killmail of killmails) {
+    const seenThisFit = new Set<string>(); // slot:typeId, so 8 identical guns count once
+    for (const item of killmail.victim.items ?? []) {
+      const slot = slotForFlag(item.flag);
+      if (!FITTED_SLOTS.has(slot)) continue;
+      const key = `${slot}:${item.item_type_id}`;
+      if (seenThisFit.has(key)) continue;
+      seenThisFit.add(key);
+      const counts = bySlot.get(slot) ?? new Map<number, number>();
+      counts.set(item.item_type_id, (counts.get(item.item_type_id) ?? 0) + 1);
+      bySlot.set(slot, counts);
+    }
+  }
+  return bySlot;
+}
+
+/**
+ * Common fits for a ship, derived from recent killmails. EVE only exposes the
+ * fit of a killmail's victim, so this samples recent losses of the hull and
+ * surfaces the modules that show up most often per slot — what pilots actually
+ * fly, not a theorycrafted ideal.
+ */
+export async function getProvenFits(shipName: string, sample: number): Promise<ProvenFits> {
+  const ids = await resolveNames([shipName]);
+  const ship = ids.inventory_types?.[0];
+  if (!ship) {
+    throw new Error(`No ship or item named "${shipName}" found. Names must be exact.`);
+  }
+
+  const entries = await zkillFetch(`/losses/shipTypeID/${ship.id}/`);
+  const recent = entries.slice(0, sample);
+  if (recent.length === 0) {
+    return {
+      ship: ship.name,
+      killmailsSampled: 0,
+      commonModulesBySlot: {},
+      note: `No recent ${ship.name} killmails on zKillboard to learn from.`,
+    };
+  }
+
+  const killmails = await Promise.all(
+    recent.map((entry) => getKillmail(entry.killmail_id, entry.zkb.hash)),
+  );
+  const bySlot = tallyModulePresence(killmails);
+
+  const typeIds = [...bySlot.values()].flatMap((counts) => [...counts.keys()]);
+  const names = await namesForIds(typeIds);
+
+  const commonModulesBySlot: ProvenFits["commonModulesBySlot"] = {};
+  for (const [slot, counts] of bySlot) {
+    commonModulesBySlot[slot] = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, MODULES_PER_SLOT)
+      .map(([typeId, seenInFits]) => ({
+        module: names.get(typeId) ?? `type-${typeId}`,
+        pctOfFits: Math.round((seenInFits / killmails.length) * 100),
+        seenInFits,
+      }));
+  }
+
+  return {
+    ship: ship.name,
+    killmailsSampled: killmails.length,
+    commonModulesBySlot,
+    note:
+      "Derived from recent killmails (the only fit data EVE exposes is the victim's). " +
+      "High frequency means a module is commonly flown on this hull — pair it with analyze_fit and " +
+      "can_i_fly before committing. Charges loaded in launchers appear under high slot.",
+  };
+}
+
 async function buildLossReport(entry: ZkillEntry, killmail: Killmail): Promise<LossReport> {
   const system = await getSystem(killmail.solar_system_id);
 

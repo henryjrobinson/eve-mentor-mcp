@@ -14,17 +14,22 @@ carry an `Expires` header (system kills/jumps and market orders are the heavy on
   within the cache window make one upstream request.
 - Verify: call `getSystemActivity` twice, confirm second is served from cache (log line).
 
-### 2. `fit_readiness` — paste a fit, get a verdict `[live-api]`
+### 2. `fit_readiness` — paste a fit, get a verdict `[live-api]` — ✅ DONE
 Parse EFT-format fit text (the format every fitting site exports). For each module + hull,
 run the prerequisite diff against the logged-in character. Output: can-fly-now yes/no,
 missing skills in training order, total days.
-- Accept: feeding a published Heron exploration fit returns correct per-module gaps.
-- Verify: EFT fixture in `test/fixtures/`, plus live check against Ruby Q.
+- Shipped: `src/eft.ts` parser + `fitReadiness()` in `src/skills.ts` (reuses the can_i_fly
+  tree/flatten/diff machinery, merging hull + all modules into one plan).
+- Verified live: a published exploration Heron fit resolves all modules and returns a
+  correct 19-skill / ~78k SP plan (not-logged-in path lists every skill the fit needs).
 
-### 3. `proven_fits <ship>` `[live-api]`
-Pull recent killmails where the given ship was the *attacker* (zKill kills endpoint),
-extract what those winning pilots flew alongside it; surface 3-5 recurring fit patterns.
-- Accept: `proven_fits Heron` returns real, recent, recurring module patterns.
+### 3. `proven_fits <ship>` `[live-api]` — ✅ DONE
+- Reality check: EVE killmails only expose the *victim's* fit, never an attacker's. So this
+  samples recent *losses* of the hull (`/losses/shipTypeID/{id}/`) and surfaces the most
+  common modules per slot with frequency — what pilots actually fly, honestly framed.
+- Shipped: `getProvenFits()` in `src/zkill.ts`.
+- Verified live: `proven_fits Heron` cleanly recovers the canonical exploration fit
+  (Core Probe Launcher 80%, Relic/Data Analyzers 65%, Gravity Capacitor rig 75%, etc.).
 
 ## v0.4 — direction & ISK
 

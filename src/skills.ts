@@ -146,13 +146,19 @@ export interface FlightPlan {
   note: string;
 }
 
-/** The complete answer to "what do I need to use this, and how long?" */
-export async function flightPlan(typeId: number, itemName: string): Promise<FlightPlan> {
-  const tree = await prerequisiteTree(typeId);
-  const flat = flattenTree(tree);
-  const trained = await trainedSkillLevels();
+interface TrainingStep {
+  skill: string;
+  fromLevel: number;
+  toLevel: number;
+  skillpointsNeeded: number;
+}
 
-  const trainingPlan = flat
+/** Diff a flattened requirement list against trained skills into a training plan. */
+function diffAgainstTrained(
+  flat: PlanEntry[],
+  trained: Map<number, number> | null,
+): TrainingStep[] {
+  return flat
     .map((entry) => {
       const fromLevel = trained?.get(entry.skillId) ?? 0;
       if (fromLevel >= entry.toLevel) return null;
@@ -161,8 +167,20 @@ export async function flightPlan(typeId: number, itemName: string): Promise<Flig
         (fromLevel > 0 ? skillpointsAtLevel(entry.rank, fromLevel) : 0);
       return { skill: entry.skill, fromLevel, toLevel: entry.toLevel, skillpointsNeeded };
     })
-    .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
+    .filter((entry): entry is TrainingStep => entry !== null);
+}
 
+function trainingDays(totalSkillpoints: number): number {
+  return Math.round((totalSkillpoints / (ESTIMATED_SP_PER_HOUR * 24)) * 10) / 10;
+}
+
+/** The complete answer to "what do I need to use this, and how long?" */
+export async function flightPlan(typeId: number, itemName: string): Promise<FlightPlan> {
+  const tree = await prerequisiteTree(typeId);
+  const flat = flattenTree(tree);
+  const trained = await trainedSkillLevels();
+
+  const trainingPlan = diffAgainstTrained(flat, trained);
   const totalSkillpointsNeeded = trainingPlan.reduce(
     (sum, entry) => sum + entry.skillpointsNeeded,
     0,
@@ -174,12 +192,57 @@ export async function flightPlan(typeId: number, itemName: string): Promise<Flig
     alreadyMet: trained !== null && trainingPlan.length === 0,
     trainingPlan,
     totalSkillpointsNeeded,
-    estimatedTrainingDays:
-      Math.round((totalSkillpointsNeeded / (ESTIMATED_SP_PER_HOUR * 24)) * 10) / 10,
+    estimatedTrainingDays: trainingDays(totalSkillpointsNeeded),
     prerequisiteTree: tree,
     note:
       trained === null
         ? "Not logged in — plan assumes zero trained skills. Log in with eve_login to personalize."
         : "Personalized against the logged-in character's trained skills. Time estimate assumes average attributes, no implants.",
+  };
+}
+
+export interface FitReadiness {
+  ship: string;
+  personalized: boolean;
+  canFlyNow: boolean;
+  missingSkills: TrainingStep[];
+  totalSkillpointsNeeded: number;
+  estimatedTrainingDays: number;
+  unresolvedNames: string[];
+  note: string;
+}
+
+/**
+ * "Can I fly this whole fit?" — merges the prerequisite trees of the hull and
+ * every module into one training plan, diffed against the logged-in character.
+ * `typeIds` is hull-first; `unresolvedNames` are fit lines that didn't resolve.
+ */
+export async function fitReadiness(
+  typeIds: number[],
+  shipName: string,
+  unresolvedNames: string[],
+): Promise<FitReadiness> {
+  const trees = await Promise.all(typeIds.map(prerequisiteTree));
+  const flat = flattenTree(trees.flat()); // dedups by skill, keeping the max level any item needs
+  const trained = await trainedSkillLevels();
+
+  const missingSkills = diffAgainstTrained(flat, trained);
+  const totalSkillpointsNeeded = missingSkills.reduce(
+    (sum, entry) => sum + entry.skillpointsNeeded,
+    0,
+  );
+
+  return {
+    ship: shipName,
+    personalized: trained !== null,
+    canFlyNow: trained !== null && missingSkills.length === 0,
+    missingSkills,
+    totalSkillpointsNeeded,
+    estimatedTrainingDays: trainingDays(totalSkillpointsNeeded),
+    unresolvedNames,
+    note:
+      trained === null
+        ? "Not logged in — assumes zero trained skills, so this lists every skill the fit needs. Log in with eve_login for a personalized can-fly verdict."
+        : "Personalized against the logged-in character's trained skills. Covers prerequisites to online/activate every module; it does not check fitting (CPU/powergrid/calibration) or cap stability.",
   };
 }

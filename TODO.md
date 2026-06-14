@@ -35,8 +35,8 @@ All four live in [drafts/launch-posts.md](drafts/launch-posts.md). Suggested ord
 
 ## Claude — next build items (from BACKLOG)
 
-- [ ] `fit_readiness` — paste any EFT fit → missing skills + training time (backlog #2)
-- [ ] `proven_fits <ship>` — what's actually winning on zKillboard (backlog #3)
+- [x] `fit_readiness` — paste any EFT fit → missing skills + training time (backlog #2) ✅
+- [x] `proven_fits <ship>` — most common modules per slot from real killmails (backlog #3) ✅
 - [ ] `what_should_i_do_tonight` (backlog #4) + `isk_guidance` (backlog #5)
 - [ ] npm publish for `npx eve-mentor-mcp` install (backlog #11)
 - [ ] Registry submissions: official MCP registry, Smithery, Glama, CCP tool directory (backlog #12)

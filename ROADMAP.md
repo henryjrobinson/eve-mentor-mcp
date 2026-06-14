@@ -46,7 +46,8 @@ Attacks pain point #6 and the "weapons and ammo" confusion.
 - `jargon` ✅ — ~45-term slang glossary (pain #8; competitor research confirmed nobody has one)
 - `sitrep` ✅ — one-call session-start orientation (borrowed from vael's SITREP pattern)
 - Server-level anti-hallucination instructions ✅ (borrowed from jita-mcp): "only tool values are authoritative"
-- Still open for v0.3.x: `fit_readiness` (paste an EFT fit → missing skills + training time, the most mentor-shaped tool found in competitor research), `proven_fits <ship>` from zKillboard
+- `fit_readiness` ✅ — paste an EFT fit → parses the format every fitting site exports, merges the prerequisite trees of hull + every module, diffs against the logged-in character, returns a can-fly verdict with missing skills in training order and total time
+- `proven_fits <ship>` ✅ — samples recent killmails of a hull and surfaces the most common modules per slot with frequency. (EVE only exposes the victim's fit, so this learns from losses — verified against the live zKill + ESI pipeline.)
 
 ### Competitor research takeaways (June 2026, full dossier in docs/)
 

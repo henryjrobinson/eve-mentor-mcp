@@ -1,7 +1,7 @@
 {
   "name": "eve-mentor-mcp",
-  "version": "0.1.1",
-  "description": "MCP server that turns Claude into an EVE Online mentor \u2014 analyzes your losses, knows your character, and helps you learn the game.",
+  "version": "0.1.2",
+  "description": "MCP server that turns Claude into an EVE Online mentor for new and returning players \u2014 explains your losses, plans your skills, checks your fits, and finds your stranded assets from live EVE data.",
   "license": "MIT",
   "type": "module",
   "bin": {

@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
   "name": "io.github.henryjrobinson/eve-mentor-mcp",
-  "description": "An AI mentor for EVE Online: explains your real losses from zKillboard, plans skill training against your actual character, checks fits for classic mistakes, and sorts you into a playstyle. Built for new and returning players.",
-  "version": "0.1.1",
+  "description": "An AI mentor for new and returning EVE Online players: explains your real losses from zKillboard, works out what to train to fly any ship or fit, checks fits for classic mistakes, shows what pilots actually fly, finds your stranded assets, and sorts you into a playstyle — all from live EVE data.",
+  "version": "0.1.2",
   "repository": {
     "url": "https://github.com/henryjrobinson/eve-mentor-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "eve-mentor-mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
       },
