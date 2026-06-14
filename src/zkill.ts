@@ -165,6 +165,50 @@ export async function getProvenFits(shipName: string, sample: number): Promise<P
   };
 }
 
+export interface NotableKill {
+  killmailId: number;
+  time: string;
+  system: string;
+  victimShip: string;
+  iskLost: number;
+  attackerCount: number;
+}
+
+/** The highest-value kills from zKill's recent global feed. */
+export async function getNotableRecentKills(limit: number): Promise<NotableKill[]> {
+  const entries = await zkillFetch(`/kills/`);
+  const top = [...entries].sort((a, b) => b.zkb.totalValue - a.zkb.totalValue).slice(0, limit);
+  return Promise.all(
+    top.map(async (entry) => {
+      const killmail = await getKillmail(entry.killmail_id, entry.zkb.hash);
+      const [system, names] = await Promise.all([
+        getSystem(killmail.solar_system_id),
+        namesForIds([killmail.victim.ship_type_id]),
+      ]);
+      return {
+        killmailId: killmail.killmail_id,
+        time: killmail.killmail_time,
+        system: system.name,
+        victimShip: names.get(killmail.victim.ship_type_id) ?? "unknown",
+        iskLost: Math.round(entry.zkb.totalValue),
+        attackerCount: killmail.attackers.length,
+      };
+    }),
+  );
+}
+
+/** A corp's recent PvP activity on zKillboard — an activity/liveness signal. */
+export async function getCorpActivity(
+  corpId: number,
+): Promise<{ recentKillmailsSampled: number; mostRecentActivity: string | null }> {
+  const entries = await zkillFetch(`/corporationID/${corpId}/`);
+  if (entries.length === 0) {
+    return { recentKillmailsSampled: 0, mostRecentActivity: null };
+  }
+  const killmail = await getKillmail(entries[0].killmail_id, entries[0].zkb.hash);
+  return { recentKillmailsSampled: entries.length, mostRecentActivity: killmail.killmail_time };
+}
+
 async function buildLossReport(entry: ZkillEntry, killmail: Killmail): Promise<LossReport> {
   const system = await getSystem(killmail.solar_system_id);
 

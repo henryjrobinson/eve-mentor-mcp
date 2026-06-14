@@ -27,9 +27,13 @@ import { getPayGuide } from "./payguide.js";
 import { getIskGuidance } from "./income.js";
 import { getTonightOptions } from "./tonight.js";
 import { recallPilotNotes, rememberGoal } from "./memory.js";
+import { getRouteDanger } from "./route.js";
+import { getWhereToBuy } from "./trade.js";
+import { getWhatsHappening } from "./news.js";
+import { evaluateCorp } from "./corp.js";
 
 const server = new McpServer(
-  { name: "eve-mentor", version: "0.4.1" },
+  { name: "eve-mentor", version: "0.5.0" },
   {
     instructions:
       "You are mentoring an EVE Online player. EVE's data changes with every patch: do NOT " +
@@ -342,6 +346,65 @@ server.tool(
       report.note = "Not logged in — use eve_login for a personalized sitrep, or ask for the player's character name to pull public loss history.";
     }
     return asResult(report);
+  },
+);
+
+server.tool(
+  "route_danger",
+  "Per-jump safety report for a journey between two systems: each system's security and last-hour kill activity, plus the notorious high-sec gank chokepoints (Uedama, Niarja, Sivala...) a new player wouldn't know to avoid. Use it before anyone undocks for a long haul.",
+  {
+    origin: z.string().describe('Exact start system name, e.g. "Jita"'),
+    destination: z.string().describe('Exact destination system name, e.g. "Amarr"'),
+    prefer_safer: z
+      .boolean()
+      .default(true)
+      .describe("Prefer the high-sec route where one exists (true) vs the shortest route (false)"),
+  },
+  async ({ origin, destination, prefer_safer }) => {
+    try {
+      return asResult(await getRouteDanger(origin, destination, prefer_safer));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "where_to_buy",
+  "Compares an item's cheapest sell price across EVE's five major trade hubs (Jita, Amarr, Dodixie, Rens, Hek), and — when logged in — how many jumps each hub is from where the player is sitting, so you can weigh price against the haul.",
+  { item_name: z.string().describe('Exact item/ship/module name, e.g. "Damage Control II"') },
+  async ({ item_name }) => {
+    try {
+      return asResult(await getWhereToBuy(item_name));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "whats_happening",
+  "A 'what's going on in EVE right now?' briefing for new or returning players: live server status, active incursions (which make whole regions dangerous), the biggest recent kills galaxy-wide, and where to read the latest patch notes. Good for someone logging back in after time away.",
+  {},
+  async () => {
+    try {
+      return asResult(await getWhatsHappening());
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "evaluate_corp",
+  "Newbie-friendliness signals for a corporation by exact name: size, age, war exposure, and recent activity from ESI + zKillboard, plus the questions to ask that no API can answer. Use it to sanity-check a corp before the player applies. The API can't see recruitment status or culture — be honest about that.",
+  { corp_name: z.string().describe("The full corporation name (not the ticker), exactly") },
+  async ({ corp_name }) => {
+    try {
+      return asResult(await evaluateCorp(corp_name));
+    } catch (error) {
+      return asError(error);
+    }
   },
 );
 

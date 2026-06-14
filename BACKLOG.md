@@ -58,20 +58,36 @@ A mentor that remembers your goals between sessions. (Pattern from vael.)
 
 ## v0.5 — safety, logistics, news
 
-### 7. `route_danger <origin> <destination>` `[live-api]`
+### 7. `route_danger <origin> <destination>` `[live-api]` — ✅ DONE
 ESI route + per-system kill counts + zKill recent activity on chokepoints. Flag Uedama-class
 gank systems by name.
-- Accept: a Jita→Amarr query flags Uedama/Niarja-pipe systems.
+- Shipped: `src/route.ts`. Per-jump security + last-hour kills, a named-chokepoint table
+  (Uedama/Niarja/Sivala/Tama/Rancer/Ignoitton), a `prefer_safer` flag (secure vs shortest),
+  and a hottest-systems summary.
+- Verified live: Jita→Amarr (shortest) = 11 jumps, flags the hot Jita node and the lowsec
+  Ahbazon shortcut.
 
-### 8. `where_to_buy <item>` `[live-api]`
+### 8. `where_to_buy <item>` `[live-api]` — ✅ DONE
 Compare the 5 trade hubs' best sell + jumps from current location; recommend.
+- Shipped: `src/trade.ts` + `getStationSell`/`getRoute` in esi.ts. All 5 hubs priced; jumps
+  from the logged-in character's current system; cheapest called out.
+- Verified live: Damage Control II — Jita cheapest (379k, 16 jumps) vs Rens (412k, 4 jumps),
+  exactly the price-vs-haul tradeoff.
 
-### 9. `whats_happening` — returning-player briefing `[live-api]`
+### 9. `whats_happening` — returning-player briefing `[live-api]` — ✅ DONE
 Patch notes RSS + biggest battles this week (zKill) + "what changed since <date>".
+- Reality check: EVE exposes no patch-notes API (every feed redirects to HTML). So this
+  composes what IS live — server status, active incursions, and the biggest recent kills —
+  and links the official notes instead of fabricating them.
+- Shipped: `src/news.ts` + `getNotableRecentKills` in zkill.ts. Verified live (33.8k online,
+  4 incursions named, top kill an Orca @ 1.85B).
 
-### 10. `evaluate_corp <name>` `[live-api]`
-ESI + zKill + EveWho fusion scored for newbie-friendliness: activity, size trend, timezone,
-kill/loss culture. (Primitives proven by kongyo2's OSINT MCP; recommendation layer is novel.)
+### 10. `evaluate_corp <name>` `[live-api]` — ✅ DONE
+ESI + zKill fusion for newbie-friendliness: activity, size, age, war exposure.
+- Shipped: `src/corp.ts` + `getCorpActivity` in zkill.ts. Reports verifiable signals
+  (size/age/war-eligible/recent activity) as good/caution/info plus the questions to ask
+  that no API can answer — honest that recruitment status and culture aren't in the data.
+  (EveWho dropped — ESI + zKill cover it.) Verified live against Pandemic Horde Inc.
 
 ## v1.0 — distribution
 

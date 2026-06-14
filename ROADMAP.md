@@ -65,12 +65,13 @@ Attacks pain points #2 and #10. No playstyle recommender exists anywhere — con
 - `isk_guidance` ✅ — viable income by SP tier (0-1M / 1-5M / 5-20M / 20M+), each activity with an honest ISK/hr range, requirements, and a first step. Static, community-sourced, explicitly framed as relative guidance not promises (exploration ≫ mining for new players).
 - Pilot memory ✅ — `remember_goal` / `recall_pilot_notes` (backlog #6): goals persist per character across sessions in `~/.config/eve-mentor/memory.json`, so coaching and `what_should_i_do_tonight` can pick up where you left off
 
-### v0.5 — Safety, logistics & news
+### v0.5 — Safety, logistics & news — ✅ shipped
 
-- `route_danger` — per-jump kill activity, gatecamp heuristics from zKill
-- `where_to_buy <item>` — cheapest sensible hub given player location, price vs haul tradeoff
-- `jargon` — EVE slang glossary (EVE Uni wiki–backed)
-- `whats_happening` — a news layer for returning players: big battles (zKill), sov changes, patch notes, what changed since you last logged in. Origin story: Henry once returned to find he couldn't dock where all his stuff was, got no satisfying answer, and quit again. A chatbot that could explain "what happened while you were gone" would have saved that subscription.
+- `route_danger` ✅ — per-jump security + last-hour kills + a named high-sec gank-chokepoint table; `prefer_safer` toggles secure vs shortest. Verified Jita→Amarr.
+- `where_to_buy <item>` ✅ — cheapest of the 5 trade hubs + jumps from the player's current system, so price weighs against the haul. Verified on Damage Control II.
+- `whats_happening` ✅ — returning-player briefing: server status, active incursions, biggest recent kills, and a link to the official patch notes (EVE exposes no notes API, so it links rather than fabricates). `jargon` already shipped in v0.3.
+- `evaluate_corp` ✅ — newbie-friendliness signals (size/age/war-exposure/activity from ESI + zKill) plus the questions to ask, honest that culture isn't in the data.
+- Origin story for `whats_happening`: Henry once returned to find he couldn't dock where all his stuff was, got no satisfying answer, and quit again. A chatbot that could explain "what happened while you were gone" would have saved that subscription.
 
 ### v0.2.x additions (shipped early)
 

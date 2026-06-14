@@ -91,6 +91,7 @@ interface IdsResult {
   inventory_types?: { id: number; name: string }[];
   systems?: { id: number; name: string }[];
   characters?: { id: number; name: string }[];
+  corporations?: { id: number; name: string }[];
   regions?: { id: number; name: string }[];
 }
 
@@ -235,6 +236,48 @@ export async function getJitaPrices(typeId: number): Promise<{
     sellVolume: sells.reduce((sum, o) => sum + o.volume_remain, 0),
     buyVolume: buys.reduce((sum, o) => sum + o.volume_remain, 0),
   };
+}
+
+/** Best sell price + volume for a type at one station within its region. */
+export async function getStationSell(
+  regionId: number,
+  stationId: number,
+  typeId: number,
+): Promise<{ bestSell: number | null; sellVolume: number }> {
+  const first = await esiFetch<MarketOrder[]>(
+    `/markets/${regionId}/orders/?type_id=${typeId}&order_type=sell&page=1`,
+  );
+  let orders = first.data;
+  if (first.pages > 1) {
+    const restPages = Array.from({ length: first.pages - 1 }, (_, i) => i + 2);
+    const rest = await Promise.all(
+      restPages.map((page) =>
+        esiFetch<MarketOrder[]>(
+          `/markets/${regionId}/orders/?type_id=${typeId}&order_type=sell&page=${page}`,
+        ),
+      ),
+    );
+    orders = orders.concat(...rest.map((r) => r.data));
+  }
+  const atStation = orders.filter((o) => o.location_id === stationId && !o.is_buy_order);
+  return {
+    bestSell: atStation.length ? Math.min(...atStation.map((o) => o.price)) : null,
+    sellVolume: atStation.reduce((sum, o) => sum + o.volume_remain, 0),
+  };
+}
+
+// ---------- Routing ----------
+
+/** Ordered system IDs from origin to destination, inclusive of both ends. */
+export async function getRoute(
+  originSystemId: number,
+  destinationSystemId: number,
+  flag: "shortest" | "secure" | "insecure" = "shortest",
+): Promise<number[]> {
+  const { data } = await esiFetch<number[]>(
+    `/route/${originSystemId}/${destinationSystemId}/?flag=${flag}`,
+  );
+  return data;
 }
 
 // ---------- Killmails ----------

@@ -27,6 +27,10 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 | `remember_goal` | optional | Save a goal the player states, so it persists across sessions (per character) |
 | `recall_pilot_notes` | optional | The goals you previously saved, oldest first |
 | `system_intel` | none | Security status + kills/jumps in the last hour for any system |
+| `route_danger` | optional | Per-jump security + last-hour kills + named gank chokepoints between two systems |
+| `where_to_buy` | optional | An item's cheapest of the 5 trade hubs, with jumps from where you are |
+| `whats_happening` | none | Returning-player briefing: server status, incursions, biggest recent kills, patch-notes link |
+| `evaluate_corp` | none | Newbie-friendliness signals for a corp (size/age/war/activity) + what to ask |
 | `lookup_item` | none | Item/ship/module description + live Jita buy/sell prices |
 | `cheapest_way_to_play` | none | Alpha vs Omega vs PLEX economics with today's live Jita PLEX price |
 | `jargon` | none | EVE slang glossary — define a term or list everything known |
@@ -149,10 +153,9 @@ npm run smoke -- "Pilot Name"      # also tests the zKillboard loss pipeline
 
 ## Roadmap
 
-Shipped through v0.4 (loss analysis, "can I fly it?", career sorting hat, fitting & combat coaching, direction & ISK guidance). Next:
+All five feature releases (v0.1–v0.5) are shipped — loss analysis, "can I fly it?", career sorting hat, fitting & combat coaching, direction & ISK guidance, pilot memory, and safety/logistics/news. What's left is distribution:
 
-- **v0.5 — Safety, logistics & news:** route danger scoring, where to buy sensibly, a "what happened while you were gone" briefing
-- Pilot memory so goals persist across sessions
+- Registry submissions (official MCP registry, Smithery, Glama) and CCP's third-party directory
 - Remote MCP deployment so no local install is needed (and ChatGPT support)
 
 Full detail in [ROADMAP.md](ROADMAP.md). PRs welcome. MIT licensed.
