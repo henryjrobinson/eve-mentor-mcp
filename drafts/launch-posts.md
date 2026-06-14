@@ -70,9 +70,10 @@ Nobody told me why it couldn't work.
 told me my dream exploration frigate was 10 training hours away, and revealed past-me had
 banked 17M skillpoints and 702M ISK across all those failed attempts.
 
-5/ 16 tools so far: loss analysis, skill planning, a career sorting hat, fit checking,
-ammo/damage matching, a jargon glossary, live PLEX math for the cheapest way to play, and
-an asset finder for stuff you lost years ago.
+5/ 26 tools now: loss analysis, skill + whole-fit planning, proven fits mined from real
+killmails, a career sorting hat, ISK guidance for your skill level, "what should I do
+tonight?", route-danger checks (it knows the gank systems), where-to-buy across the trade
+hubs, corp vetting, and an asset finder for stuff you lost years ago.
 
 6/ Free, MIT, built on the official ESI API. Repo:
 https://github.com/henryjrobinson/eve-mentor-mcp
@@ -147,12 +148,15 @@ skillpoints and 702M ISK across fifteen years of quitting. Site: https://ruby-ev
 I've released eve-mentor-mcp, an MIT-licensed MCP server aimed at the new-player and
 returning-player learning problem rather than at veterans.
 
-Current tools (16): loss analysis with full fit detail (zKillboard + ESI killmails),
-recursive skill-prerequisite planning diffed against the character, a 15-path career
-matcher, mechanical fit checking (mixed weapons / mixed tank / missing prop detection),
-NPC damage-type matching, a slang glossary, live PLEX/Omega economics, system danger
-intel, Jita pricing, and an asset sweep that flags asset-safety wraps and inaccessible
-structures.
+Current tools (26): loss analysis with full fit detail (zKillboard + ESI killmails),
+recursive skill-prerequisite planning diffed against the character, whole-fit readiness
+from a pasted EFT fit, proven fits mined from recent killmails, a 15-path career matcher,
+mechanical fit checking (mixed weapons / mixed tank / missing prop detection), NPC
+damage-type matching, ISK guidance by skillpoint tier, a "what should I do tonight?"
+composer, per-jump route danger with named gank chokepoints, trade-hub price comparison,
+corp newbie-friendliness checks, a returning-player "what's happening" briefing, pilot
+memory, a slang glossary, live PLEX/Omega economics, system danger intel, Jita pricing,
+and an asset sweep that flags asset-safety wraps and inaccessible structures.
 
 Technical notes: TypeScript, ESI with error-budget guarding and Expires-based caching,
 identifying User-Agent, EVE SSO via PKCE (no secret stored, read-only scopes only), tokens
