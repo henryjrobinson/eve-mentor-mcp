@@ -24,6 +24,8 @@ Works with Claude Desktop, Claude Code, and any MCP client.
 | `career_test` | none | The EVE career "sorting hat" — Claude interviews you, then matches you to playstyles |
 | `isk_guidance` | none | Viable income activities by skillpoint tier, with honest ISK/hr ranges and first steps |
 | `what_should_i_do_tonight` | SSO | Composes your real skills/wallet/location/ship into concrete session suggestions |
+| `remember_goal` | optional | Save a goal the player states, so it persists across sessions (per character) |
+| `recall_pilot_notes` | optional | The goals you previously saved, oldest first |
 | `system_intel` | none | Security status + kills/jumps in the last hour for any system |
 | `lookup_item` | none | Item/ship/module description + live Jita buy/sell prices |
 | `cheapest_way_to_play` | none | Alpha vs Omega vs PLEX economics with today's live Jita PLEX price |

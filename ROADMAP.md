@@ -63,7 +63,7 @@ Attacks pain points #2 and #10. No playstyle recommender exists anywhere — con
 - `playstyle_finder` — covered by `career_test` (shipped in v0.2): interview-style matching across ~15 recognized career paths, each with first ship + first steps
 - `what_should_i_do_tonight` ✅ — composes the logged-in character's real situation (skillpoints, wallet, location security, current ship, what's training) with the income options for their SP tier; the client turns it into 2-3 concrete, situation-aware suggestions. Verified live against a real character.
 - `isk_guidance` ✅ — viable income by SP tier (0-1M / 1-5M / 5-20M / 20M+), each activity with an honest ISK/hr range, requirements, and a first step. Static, community-sourced, explicitly framed as relative guidance not promises (exploration ≫ mining for new players).
-- Still open for v0.4.x: pilot memory (`remember_goal` / `recall_pilot_notes`, backlog #6) so suggestions persist across sessions
+- Pilot memory ✅ — `remember_goal` / `recall_pilot_notes` (backlog #6): goals persist per character across sessions in `~/.config/eve-mentor/memory.json`, so coaching and `what_should_i_do_tonight` can pick up where you left off
 
 ### v0.5 — Safety, logistics & news
 

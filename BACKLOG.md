@@ -50,10 +50,11 @@ ranges and first steps. Static data, research-sourced (EVE Uni + r/Eve consensus
   activities (4/4/4/5) with ISK/hr ranges, requirements, and first steps; a prominent
   disclaimer frames the numbers as relative community consensus, not live data.
 
-### 6. Pilot memory tools
+### 6. Pilot memory tools — ✅ DONE
 `remember_goal`, `recall_pilot_notes` — persistent JSON at ~/.config/eve-mentor/memory.json.
 A mentor that remembers your goals between sessions. (Pattern from vael.)
-- Accept: notes survive server restart; recall returns chronological entries.
+- Shipped: `src/memory.ts`, keyed per character (by ID) so pilots don't mix.
+- Verified: goals written in one process read back in a fresh process, oldest-first.
 
 ## v0.5 — safety, logistics, news
 

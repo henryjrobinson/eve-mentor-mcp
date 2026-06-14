@@ -26,9 +26,10 @@ import { defineJargon } from "./jargon.js";
 import { getPayGuide } from "./payguide.js";
 import { getIskGuidance } from "./income.js";
 import { getTonightOptions } from "./tonight.js";
+import { recallPilotNotes, rememberGoal } from "./memory.js";
 
 const server = new McpServer(
-  { name: "eve-mentor", version: "0.4.0" },
+  { name: "eve-mentor", version: "0.4.1" },
   {
     instructions:
       "You are mentoring an EVE Online player. EVE's data changes with every patch: do NOT " +
@@ -275,6 +276,32 @@ server.tool(
   async () => {
     try {
       return asResult(await getTonightOptions());
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "remember_goal",
+  "Save a goal or ambition the player states ('I want to fly a Gila', 'aiming for nullsec exploration', 'save up for a freighter') so it persists across sessions. Call this whenever the player expresses a direction worth steering toward later. Stored per character.",
+  { goal: z.string().describe("The goal in the player's own terms, one ambition per call") },
+  async ({ goal }) => {
+    try {
+      return asResult(await rememberGoal(goal));
+    } catch (error) {
+      return asError(error);
+    }
+  },
+);
+
+server.tool(
+  "recall_pilot_notes",
+  "The goals this player has previously asked you to remember, oldest first. Call it at the start of a session (or alongside what_should_i_do_tonight) to pick up where you left off and steer coaching toward what they actually want.",
+  {},
+  async () => {
+    try {
+      return asResult(await recallPilotNotes());
     } catch (error) {
       return asError(error);
     }
